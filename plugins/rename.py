@@ -5,7 +5,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, ForceReply
 from config import Config
 from database.database import db
-from helper.utils import progress_for_pyrogram, humanbytes
+from helper.utils import progress_for_pyrogram, humanbytes, get_fillings
 from helper.ffmpeg import add_metadata, get_duration, get_width_height, take_screen_shot
 
 # Dictionary to store ongoing tasks for cancellation
@@ -26,12 +26,17 @@ async def handle_file(client: Client, message: Message):
 
     file = getattr(message, message.media.value)
     filename = file.file_name
+    fillings = get_fillings(message)
 
     # Check for autorename
     autorename_format = await db.get_autorename_format(user_id)
     if autorename_format:
         # Auto rename logic
-        new_name = autorename_format.replace("{file_name}", os.path.splitext(filename)[0])
+        try:
+            new_name = autorename_format.format(**fillings)
+        except Exception:
+            new_name = autorename_format.replace("{file_name}", os.path.splitext(filename)[0])
+
         # Add extension if not present in format or just append original extension
         if "." not in new_name:
              new_name += os.path.splitext(filename)[1]
@@ -141,11 +146,21 @@ async def process_rename(client, message, new_name):
         thumbnail = await take_screen_shot(file_path, path, 1)
 
     # Caption
+    fillings = get_fillings(message)
+    fillings['file_name'] = new_name # Update with new name
+    fillings['file_size'] = humanbytes(os.path.getsize(file_path))
+
     user_caption = await db.get_caption(user_id)
     if user_caption:
-        caption = user_caption.format(file_name=new_name, file_size=humanbytes(os.path.getsize(file_path)))
+        try:
+            caption = user_caption.format(**fillings)
+        except Exception:
+            caption = user_caption.format(file_name=new_name, file_size=fillings['file_size'])
     else:
-        caption = Config.DEF_CAP.format(file_name=new_name)
+        try:
+            caption = Config.DEF_CAP.format(**fillings)
+        except Exception:
+            caption = Config.DEF_CAP.format(file_name=new_name)
 
     # Media Type
     media_type = await db.get_media_type(user_id)

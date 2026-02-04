@@ -1,5 +1,8 @@
 import math
 import time
+import re
+import os
+from datetime import datetime
 
 def humanbytes(size):
     if not size:
@@ -59,3 +62,88 @@ def TimeFormatter(milliseconds: int) -> str:
         ((str(seconds) + "s, ") if seconds else "") + \
         ((str(milliseconds) + "ms, ") if milliseconds else "")
     return tmp[:-2]
+
+def get_wish():
+    hour = datetime.now().hour
+    if 5 <= hour < 12:
+        return "Good Morning"
+    elif 12 <= hour < 17:
+        return "Good Afternoon"
+    elif 17 <= hour < 21:
+        return "Good Evening"
+    else:
+        return "Good Night"
+
+def get_file_info(filename):
+    # Regex patterns for common metadata in filenames
+    year_match = re.search(r'(19|20)\d{2}', filename)
+    quality_match = re.search(r'(\d{3,4}p|BRRip|Web-DL|WEB-DL|HDRip|DVDRip|BluRay)', filename, re.IGNORECASE)
+    season_match = re.search(r'S(\d{1,2})', filename, re.IGNORECASE)
+    episode_match = re.search(r'E(\d{1,3})', filename, re.IGNORECASE)
+    language_match = re.search(r'(Hindi|English|Tamil|Telugu|Kannada|Malayalam|Bengali|Marathi|Punjabi|dual)', filename, re.IGNORECASE)
+
+    return {
+        'year': year_match.group(0) if year_match else "N/A",
+        'quality': quality_match.group(0) if quality_match else "N/A",
+        'season': season_match.group(1) if season_match else "N/A",
+        'episode': episode_match.group(1) if episode_match else "N/A",
+        'language': language_match.group(0) if language_match else "N/A"
+    }
+
+def get_fillings(message):
+    fillings = {}
+
+    # Common
+    fillings['wish'] = get_wish()
+
+    # File name and extension
+    file = getattr(message, message.media.value) if message.media else None
+    if file:
+        filename = getattr(file, 'file_name', 'None')
+        fillings['filename'] = filename
+        fillings['filesize'] = humanbytes(getattr(file, 'file_size', 0))
+        fillings['mime_type'] = getattr(file, 'mime_type', 'N/A')
+        ext = os.path.splitext(filename)[1].replace('.', '') if '.' in filename else 'None'
+        fillings['ext'] = ext
+
+        # Extracted info from filename
+        info = get_file_info(filename)
+        fillings.update(info)
+
+    # Caption logic
+    if message.caption:
+        fillings['caption'] = message.caption
+        # In newer Pyrogram, html is available via message.caption.html if entities exist
+        # But if it's just a string, we handle it
+        try:
+            fillings['html_caption'] = message.caption.html
+        except:
+            fillings['html_caption'] = message.caption
+    else:
+        fillings['html_caption'] = "N/A"
+        fillings['caption'] = "N/A"
+
+    # Specific to Video
+    if message.video:
+        fillings['duration'] = TimeFormatter(message.video.duration * 1000)
+        fillings['height'] = message.video.height
+        fillings['width'] = message.video.width
+        fillings['resolution'] = f"{message.video.width}x{message.video.height}"
+
+    # Specific to Audio
+    if message.audio:
+        fillings['duration'] = TimeFormatter(message.audio.duration * 1000)
+        fillings['title'] = message.audio.title if message.audio.title else "N/A"
+        fillings['artist'] = message.audio.artist if message.audio.artist else "N/A"
+
+    # Specific to Photo
+    if message.photo:
+        fillings['filesize'] = humanbytes(message.photo.file_size)
+        fillings['width'] = message.photo.width
+        fillings['height'] = message.photo.height
+        # Photos don't usually have filenames in Pyrogram message objects unless it's a document-photo
+        if 'filename' not in fillings:
+             fillings['filename'] = "photo.jpg"
+             fillings['ext'] = "jpg"
+
+    return fillings
