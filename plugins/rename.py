@@ -15,6 +15,10 @@ ongoing_tasks = {}
 async def handle_file(client: Client, message: Message):
     user_id = message.from_user.id
 
+    # Skip if sequencing is active
+    if await db.is_sequencing(user_id):
+        return
+
     # Check if user is banned
     if await db.is_banned(user_id):
         await message.reply_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}")
@@ -228,13 +232,22 @@ async def media_cb(client, query):
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task(client, message):
     user_id = message.from_user.id
+    cancelled = False
+
+    if await db.is_sequencing(user_id):
+        await db.stop_sequence(user_id)
+        await message.reply_text(Config.CANCEL_SEQUENCE_MSG)
+        cancelled = True
+
     if user_id in ongoing_tasks and ongoing_tasks[user_id]:
         for task in ongoing_tasks[user_id]:
             task.cancel()
         ongoing_tasks[user_id] = []
         await message.reply_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}")
-    else:
-        await message.reply_text(f"No ongoing task found.\n\n{Config.CREDITS_LINE}")
+        cancelled = True
+
+    if not cancelled:
+        await message.reply_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}")
 
 @Client.on_message(filters.private & filters.command("queue"))
 async def queue_cmd(client, message):

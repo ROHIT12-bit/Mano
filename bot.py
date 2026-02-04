@@ -33,6 +33,9 @@ class Bot(Client):
         try:
             await self.set_bot_commands([
                 BotCommand("start", "Check whether the bot is alive"),
+                BotCommand("ssequence", "Start file sequencing"),
+                BotCommand("esequence", "End file sequencing"),
+                BotCommand("stats", "Check usage statistics"),
                 BotCommand("autorename", "Set auto-rename format"),
                 BotCommand("showformat", "View your current rename format"),
                 BotCommand("source", "Select rename source"),

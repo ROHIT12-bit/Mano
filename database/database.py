@@ -49,7 +49,9 @@ class Database:
             credits=10, # default credits
             is_premium=False,
             premium_expiry=0,
-            rename_count=0
+            rename_count=0,
+            is_sequencing=False,
+            sequence_files=[]
         )
 
     async def add_user(self, id):
@@ -158,6 +160,31 @@ class Database:
 
     async def increment_rename_count(self, user_id):
         await self.col.update_one({'id': int(user_id)}, {'$inc': {'rename_count': 1}})
+
+    async def start_sequence(self, user_id):
+        await self.col.update_one({'id': int(user_id)}, {'$set': {'is_sequencing': True, 'sequence_files': []}})
+
+    async def add_to_sequence(self, user_id, file_id, file_name, media_type):
+        await self.col.update_one(
+            {'id': int(user_id)},
+            {'$push': {'sequence_files': {'file_id': file_id, 'file_name': file_name, 'media_type': media_type}}}
+        )
+
+    async def get_sequence(self, user_id):
+        user = await self.col.find_one({'id': int(user_id)})
+        return user.get('sequence_files', []) if user else []
+
+    async def stop_sequence(self, user_id):
+        await self.col.update_one({'id': int(user_id)}, {'$set': {'is_sequencing': False, 'sequence_files': []}})
+        await self.settings.update_one({'id': 'stats'}, {'$inc': {'total_sequences': 1}}, upsert=True)
+
+    async def is_sequencing(self, user_id):
+        user = await self.col.find_one({'id': int(user_id)})
+        return user.get('is_sequencing', False) if user else False
+
+    async def get_total_sequences(self):
+        stats = await self.settings.find_one({'id': 'stats'})
+        return stats.get('total_sequences', 0) if stats else 0
 
 db = None
 if Config.DB_URL:

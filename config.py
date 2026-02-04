@@ -33,6 +33,11 @@ class Config:
     HELP_MSG = os.environ.get("HELP_MSG", "<b>Help Menu</b>\n\n- Send me any file.\n- Choose rename option.\n- Set your custom format with /autorename.\n\n<b>By @Botskingdoms</b>")
     ABOUT_MSG = os.environ.get("ABOUT_MSG", "<b>About This Bot</b>\n\nA powerful Telegram bot to rename files and change metadata.\n\nDeveloper: @Botskingdoms")
 
+    # Sequence Messages
+    S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "<b>File Sequencing Started!</b>\n\nSend me documents, videos, or audio files one by one. Use /esequence when done.")
+    E_SEQUENCE_MSG = os.environ.get("E_SEQUENCE_MSG", "<b>File Sequencing Ended!</b>\n\nProcessing your files in order...")
+    CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "<b>File Sequencing Cancelled!</b>")
+
     # Credits line
     CREDITS_LINE = os.environ.get("CREDITS_LINE", "By @Botskingdoms")
 

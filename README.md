@@ -13,12 +13,16 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 - Supports unlimited renaming at a time.
 - Deploy to Koyeb, Heroku, Railway, Render.
 - Automatically rename your files.
+- File Sequencing: Organize and sequence your files in order.
 - Set mediatype to upload filetype.
 - Premium subscription & credits system.
 - Admin commands for user management.
 
 ## Commands
 - `/start` – Check whether the bot is alive
+- `/ssequence` – Start a file sequencing session
+- `/esequence` – End a file sequencing session and receive files
+- `/stats` – View global and personal statistics
 - `/autorename` – Set auto-rename format
 - `/showformat` – View your current rename format
 - `/source` – Select rename source
