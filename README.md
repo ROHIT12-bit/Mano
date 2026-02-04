@@ -35,6 +35,7 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 - `/viewthumb` – View current thumbnail
 - `/delthumb` – Delete thumbnail
 - `/get_thumb` – Extract thumbnail from video/file
+- `/set_caption` – Set custom caption
 - `/see_caption` – View current caption
 - `/del_caption` – Delete caption
 - `/meta` – Set metadata text
@@ -43,7 +44,7 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 - `/metaoff` – Disable metadata
 - `/plan` – View premium plans
 - `/premium` – Check pre/plans
-- `/premium_users` – List premium
+- `/premium_users` – List premium users
 - `/addcredit` – Add credits to user
 - `/remcredit` – Remove credits
 - `/add_premium` – Add premium user
@@ -56,6 +57,7 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 - `/unban` – Unban user
 - `/admin_mode` – Toggle admin/user mode
 - `/add_admin` – Add sudo/admin (Owner only)
+- `/shortlink` – Configure link shortener
 
 ## Deployment
 

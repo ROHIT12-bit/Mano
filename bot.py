@@ -48,6 +48,7 @@ class Bot(Client):
                 BotCommand("viewthumb", "View current thumbnail"),
                 BotCommand("delthumb", "Delete thumbnail"),
                 BotCommand("get_thumb", "Extract thumbnail from video/file"),
+                BotCommand("set_caption", "Set custom caption"),
                 BotCommand("see_caption", "View current caption"),
                 BotCommand("del_caption", "Delete caption"),
                 BotCommand("meta", "Set metadata text"),
@@ -56,14 +57,20 @@ class Bot(Client):
                 BotCommand("metaoff", "Disable metadata"),
                 BotCommand("plan", "View premium plans"),
                 BotCommand("premium", "Check pre/plans"),
-                BotCommand("restart", "Restart bot"),
-                BotCommand("status", "Bot status"),
-                BotCommand("users", "Total users"),
-                BotCommand("broadcast", "Broadcast message"),
-                BotCommand("ban", "Ban a user"),
-                BotCommand("unban", "Unban user"),
-                BotCommand("admin_mode", "Toggle admin/user mode"),
-                BotCommand("add_admin", "Add sudo/admin (Owner only)")
+                BotCommand("premium_users", "List premium users (Admin)"),
+                BotCommand("addcredit", "Add credits to user (Admin)"),
+                BotCommand("remcredit", "Remove credits (Admin)"),
+                BotCommand("add_premium", "Add premium user (Admin)"),
+                BotCommand("remove_premium", "Remove premium user (Admin)"),
+                BotCommand("restart", "Restart bot (Admin)"),
+                BotCommand("status", "Bot status (Admin)"),
+                BotCommand("users", "Total users (Admin)"),
+                BotCommand("broadcast", "Broadcast message (Admin)"),
+                BotCommand("ban", "Ban a user (Admin)"),
+                BotCommand("unban", "Unban user (Admin)"),
+                BotCommand("admin_mode", "Toggle admin mode (Admin)"),
+                BotCommand("add_admin", "Add admin (Owner only)"),
+                BotCommand("shortlink", "Set shortlink (Admin)")
             ])
             logger.info("Bot commands set successfully.")
         except Exception as e:
