@@ -3,16 +3,13 @@ import time
 import re
 import os
 from datetime import datetime
+from config import Config
 
 def big_and_nice(text):
     if not text:
         return ""
 
     # Mathematical Sans-Serif Bold
-    # A-Z: U+1D5D4 - U+1D5ED
-    # a-z: U+1D5EE - U+1D607
-    # 0-9: U+1D7EC - U+1D7F5
-
     def get_char(c):
         o = ord(c)
         if 65 <= o <= 90: # A-Z
@@ -23,42 +20,29 @@ def big_and_nice(text):
             return chr(o - 48 + 0x1D7EC)
         return c
 
-    # Don't convert content inside HTML tags, placeholders, or markdown URLs
+    # Pattern to find segments that should NOT be transformed
+    # 1. HTML tags: <[^>]+>
+    # 2. Placeholders: \{[^\}]+\}
+    # 3. URLs: (?:http|https)://\S+|t\.me/\S+
+    # 4. Mentions: @\w+
+    # 5. Hashtags: #\w+
+    # 6. Markdown URLs: \[[^\]]+\]\([^\)]+\)
+
+    combined_pattern = r'(<[^>]+>|\{[^\}]+\}|(?:http|https)://\S+|t\.me/\S+|@\w+|#\w+|\[[^\]]+\]\([^\)]+\))'
+
+    parts = re.split(combined_pattern, text)
     result = ""
-    is_tag = False
-    is_placeholder = False
-    is_url = False
 
-    i = 0
-    while i < len(text):
-        char = text[i]
-        if char == '<':
-            is_tag = True
-        elif char == '>':
-            is_tag = False
-            result += char
-            i += 1
+    for part in parts:
+        if not part:
             continue
-        elif char == '{':
-            is_placeholder = True
-        elif char == '}':
-            is_placeholder = False
-            result += char
-            i += 1
-            continue
-        elif char == '(' and i > 0 and text[i-1] == ']':
-            is_url = True
-        elif char == ')' and is_url:
-            is_url = False
-            result += char
-            i += 1
-            continue
-
-        if is_tag or is_placeholder or is_url:
-            result += char
+        # If part matches any of the protected patterns, keep it as is
+        if re.match(combined_pattern, part):
+            result += part
         else:
-            result += get_char(char)
-        i += 1
+            # Transform characters in this part
+            transformed_part = "".join(get_char(c) for c in part)
+            result += transformed_part
 
     return result
 
@@ -67,6 +51,11 @@ def quote_text(text):
         return ""
     # Automatically apply big and nice style
     bn_text = big_and_nice(text)
+
+    # Add credits if not present
+    if "Botskingdoms" not in bn_text:
+        bn_text += f"\n\n{Config.CREDITS_LINE}"
+
     if "<blockquote>" in text:
         return text # Trust the source if it already has tags
     return f"<blockquote>{bn_text}</blockquote>"

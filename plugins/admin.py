@@ -11,6 +11,7 @@ from helper.utils import quote_text
 async def status_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
     users_count = await db.total_users_count()
     await message.reply_text(quote_text(f"<b>Bot Status:</b>\n\nTotal Users: {users_count}\n\n{Config.CREDITS_LINE}"))
@@ -19,6 +20,7 @@ async def status_cmd(client: Client, message: Message):
 async def users_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
     users_count = await db.total_users_count()
     await message.reply_text(quote_text(f"Total Users: {users_count}\n\n{Config.CREDITS_LINE}"))
@@ -27,9 +29,11 @@ async def users_cmd(client: Client, message: Message):
 async def broadcast_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
-    if not message.reply_to_message:
-        await message.reply_text(quote_text("Reply to a message to broadcast."))
+
+    if not message.reply_to_message and len(message.command) < 2:
+        await message.reply_text(quote_text("Reply to a message or provide text to broadcast."))
         return
 
     ms = await message.reply_text(quote_text("Broadcasting..."))
@@ -39,7 +43,11 @@ async def broadcast_cmd(client: Client, message: Message):
 
     async for user in all_users:
         try:
-            await message.reply_to_message.copy(user['id'])
+            if message.reply_to_message:
+                await message.reply_to_message.copy(user['id'])
+            else:
+                broadcast_text = message.text.split(" ", 1)[1]
+                await client.send_message(user['id'], quote_text(broadcast_text))
             success += 1
         except:
             failed += 1
@@ -50,6 +58,7 @@ async def broadcast_cmd(client: Client, message: Message):
 async def ban_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
     if len(message.command) < 2:
         await message.reply_text(quote_text("Usage: /ban [user_id]"))
@@ -65,6 +74,7 @@ async def ban_cmd(client: Client, message: Message):
 async def unban_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
     if len(message.command) < 2:
         await message.reply_text(quote_text("Usage: /unban [user_id]"))
@@ -80,6 +90,7 @@ async def unban_cmd(client: Client, message: Message):
 async def restart_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
+        await message.reply_text(quote_text("Access Denied! You are not an admin."))
         return
     await message.reply_text(quote_text("Restarting..."))
     os.execl(sys.executable, sys.executable, *sys.argv)
@@ -88,6 +99,7 @@ async def restart_cmd(client: Client, message: Message):
 async def add_admin_cmd(client: Client, message: Message):
     # Only owner (from config) can add admins
     if message.from_user.id not in Config.Botskingdoms:
+        await message.reply_text(quote_text("Only the owner can add admins."))
         return
     if len(message.command) < 2:
         await message.reply_text(quote_text("Usage: /add_admin [user_id]"))
