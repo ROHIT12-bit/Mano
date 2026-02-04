@@ -20,6 +20,7 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 
 ## Commands
 - `/start` – Check whether the bot is alive
+- `/trial` – Get free trial premium
 - `/ssequence` – Start a file sequencing session
 - `/esequence` – End a file sequencing session and receive files
 - `/stats` – View global and personal statistics
@@ -58,6 +59,33 @@ A powerful and fast Telegram bot to rename files, change metadata, and manage th
 - `/admin_mode` – Toggle admin/user mode
 - `/add_admin` – Add sudo/admin (Owner only)
 - `/shortlink` – Configure link shortener
+
+## BotFather Commands
+```
+start - Check whether the bot is alive
+autorename - Set auto-rename format
+showformat - View your current rename format
+source - Select rename source
+cancel - Clear current queue
+queue - Check current queues
+info - View your account info
+leaderboard - Top 10 renamers
+setmedia - Choose allowed media types
+setthumb - Set thumbnail
+viewthumb - View current thumbnail
+delthumb - Delete thumbnail
+get_thumb - Extract thumbnail from video/file
+see_caption - View current caption
+del_caption - Delete caption
+meta - Set metadata text
+setallmeta - Apply metadata to all fields
+metaon - Enable metadata
+metaoff - Disable metadata
+plan - View premium plans
+premium - Check pre/plans
+trial - Get free trial premium
+stats - View bot statistics
+```
 
 ## Deployment
 

@@ -2,8 +2,28 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from config import Config
 from database.database import db
-from helper.utils import quote_text
+from helper.utils import quote_text, big_and_nice
 import pyrogram
+
+def get_start_buttons():
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🏡", callback_data="start"),
+            InlineKeyboardButton("🛡️", callback_data="admin_info"),
+            InlineKeyboardButton("💳", callback_data="plan_callback"),
+            InlineKeyboardButton("💸", callback_data="premium_callback"),
+            InlineKeyboardButton("🖥️", callback_data="source_info")
+        ],
+        [InlineKeyboardButton("• 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 •", callback_data="help")],
+        [
+            InlineKeyboardButton("• 𝗨𝗣𝗗𝗔𝗧𝗘𝗦 • ⚡", url="https://t.me/Botskingdoms"),
+            InlineKeyboardButton("• 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 • ⚡", url="https://t.me/Botskingdoms_Support")
+        ],
+        [
+            InlineKeyboardButton("• 𝗔𝗕𝗢𝗨𝗧 •", callback_data="about"),
+            InlineKeyboardButton("• 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 •", callback_data="plan_callback")
+        ]
+    ])
 
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client: Client, message: Message):
@@ -29,12 +49,7 @@ async def start(client: Client, message: Message):
             return
 
     text = quote_text(Config.START_MSG.format(mention=user.mention))
-    buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("Updates", url="https://t.me/Botskingdoms"),
-         InlineKeyboardButton("Support", url="https://t.me/Botskingdoms_Support")],
-        [InlineKeyboardButton("About", callback_data="about"),
-         InlineKeyboardButton("Help", callback_data="help")]
-    ])
+    buttons = get_start_buttons()
 
     if Config.START_PIC:
         await message.reply_photo(photo=Config.START_PIC, caption=text, reply_markup=buttons)
@@ -57,37 +72,47 @@ async def info(client: Client, message: Message):
     await message.reply_text(quote_text(text))
 
 @Client.on_message(filters.private & filters.command("source"))
-async def source(client: Client, message: Message):
+async def source_cmd(client: Client, message: Message):
     text = f"This bot is open source. You can find the source code on GitHub.\n\n{Config.CREDITS_LINE}"
     await message.reply_text(quote_text(text))
 
 @Client.on_callback_query(filters.regex("about"))
 async def about(client, query):
     text = quote_text(Config.ABOUT_MSG)
-    if query.message.photo:
-        await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
-    else:
-        await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
 
 @Client.on_callback_query(filters.regex("help"))
 async def help_cmd(client, query):
     text = quote_text(Config.HELP_MSG)
-    if query.message.photo:
-        await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
-    else:
-        await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
 
 @Client.on_callback_query(filters.regex("start"))
 async def start_back(client, query):
     user = query.from_user
     text = quote_text(Config.START_MSG.format(mention=user.mention))
-    buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("Updates", url="https://t.me/Botskingdoms"),
-         InlineKeyboardButton("Support", url="https://t.me/Botskingdoms_Support")],
-        [InlineKeyboardButton("About", callback_data="about"),
-         InlineKeyboardButton("Help", callback_data="help")]
-    ])
-    if query.message.photo:
-        await query.message.edit_caption(text, reply_markup=buttons)
+    buttons = get_start_buttons()
+    await query.message.edit_caption(text, reply_markup=buttons)
+
+@Client.on_callback_query(filters.regex("admin_info"))
+async def admin_info_cb(client, query):
+    text = quote_text(f"Admin: @Botskingdoms\n\n{Config.CREDITS_LINE}")
+    await query.answer(big_and_nice("Admin Info"), show_alert=True)
+
+@Client.on_callback_query(filters.regex("plan_callback"))
+async def plan_callback(client, query):
+    text = quote_text("<b>Premium Plans:</b>\n\n1. Daily: 10 INR\n2. Weekly: 50 INR\n3. Monthly: 150 INR\n\nContact @Botskingdoms to buy.")
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+
+@Client.on_callback_query(filters.regex("premium_callback"))
+async def premium_callback(client, query):
+    is_premium = await db.is_premium(query.from_user.id)
+    if is_premium:
+        text = quote_text("You are a Premium User!")
     else:
-        await query.message.edit_text(text, reply_markup=buttons)
+        text = quote_text("You are a Free User. Upgrade to Premium for more features.")
+    await query.answer(text, show_alert=True)
+
+@Client.on_callback_query(filters.regex("source_info"))
+async def source_info_cb(client, query):
+    text = quote_text(f"Bot Source: Private\nDeveloper: @Botskingdoms\n\n{Config.CREDITS_LINE}")
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))

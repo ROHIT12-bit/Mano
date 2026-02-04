@@ -51,7 +51,8 @@ class Database:
             premium_expiry=0,
             rename_count=0,
             is_sequencing=False,
-            sequence_files=[]
+            sequence_files=[],
+            used_trial=False
         )
 
     async def add_user(self, id):
@@ -181,6 +182,13 @@ class Database:
     async def is_sequencing(self, user_id):
         user = await self.col.find_one({'id': int(user_id)})
         return user.get('is_sequencing', False) if user else False
+
+    async def has_used_trial(self, user_id):
+        user = await self.col.find_one({'id': int(user_id)})
+        return user.get('used_trial', False) if user else True
+
+    async def set_used_trial(self, user_id):
+        await self.col.update_one({'id': int(user_id)}, {'$set': {'used_trial': True}})
 
     async def get_total_sequences(self):
         stats = await self.settings.find_one({'id': 'stats'})

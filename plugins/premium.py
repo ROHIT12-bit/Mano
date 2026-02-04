@@ -11,8 +11,23 @@ async def plan_cmd(client: Client, message: Message):
            "1. Daily: 10 INR\n" \
            "2. Weekly: 50 INR\n" \
            "3. Monthly: 150 INR\n\n" \
-           f"Contact {Config.CREDITS_LINE} to buy.\n\n{Config.CREDITS_LINE}"
+           f"Contact @Botskingdoms to buy.\n\n{Config.CREDITS_LINE}"
     await message.reply_text(quote_text(text))
+
+@Client.on_message(filters.private & filters.command("trial"))
+async def trial_cmd(client, message):
+    user_id = message.from_user.id
+    if await db.is_premium(user_id):
+        await message.reply_text(quote_text("You already have premium!"))
+        return
+    if await db.has_used_trial(user_id):
+        await message.reply_text(quote_text("You have already used your trial!"))
+        return
+
+    expiry_time = time.time() + (1 * 24 * 60 * 60) # 1 day
+    await db.add_premium(user_id, expiry_time)
+    await db.set_used_trial(user_id)
+    await message.reply_text(quote_text(f"Trial premium activated for 1 day!\n\n{Config.CREDITS_LINE}"))
 
 @Client.on_message(filters.private & filters.command("premium"))
 async def premium_info(client: Client, message: Message):

@@ -25,21 +25,21 @@ class Config:
     WORKERS = int(os.environ.get("WORKERS", "20"))
 
     # Default caption
-    DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\n[ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴏᴛsᴋɪɴɢᴅᴏᴍs](ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ʙᴏᴛsᴋɪɴɢᴅᴏᴍs)")
+    DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\nPowered By @Botskingdoms")
 
     # Messages
-    START_MSG = os.environ.get("START_MSG", "ʜᴇʟʟᴏ {mention}!\n\nɪ ᴀᴍ ғᴀsᴛ ʀᴇɴᴀᴍᴇʀ ʙᴏᴛ.\n\nsᴇɴᴅ ғɪʟᴇ ᴛᴏ sᴛᴀʀᴛ.\n\n[ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴏᴛsᴋɪɴɢᴅᴏᴍs](ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ʙᴏᴛsᴋɪɴɢᴅᴏᴍs)")
-    FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ!")
-    HELP_MSG = os.environ.get("HELP_MSG", "sᴇɴᴅ ғɪʟᴇ ᴀɴᴅ ᴄʜᴏᴏsᴇ ᴏᴘᴛɪᴏɴ.\nᴜsᴇ /autorename ᴛᴏ sᴇᴛ ғᴏʀᴍᴀᴛ.")
-    ABOUT_MSG = os.environ.get("ABOUT_MSG", "ғᴀsᴛ ʀᴇɴᴀᴍᴇʀ ʙᴏᴛ ʙʏ ʙᴏᴛsᴋɪɴɢᴅᴏᴍs.")
+    START_MSG = os.environ.get("START_MSG", "HEY!!, 『{mention}』\n\n➤ PURPOSE OF THE BOT:\nTHIS BOT MAKES RENAMING ANIME AND SERIES FILES EASY AND STRESS-FREE.\n\n➤ MAINTAINED BY : @Botskingdoms\n__________________________________")
+    FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "Join our channel to use me!")
+    HELP_MSG = os.environ.get("HELP_MSG", "Send any file and choose option.\nUse /autorename to set format.")
+    ABOUT_MSG = os.environ.get("ABOUT_MSG", "Fast Renamer Bot By @Botskingdoms.")
 
     # Sequence Messages
-    S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "sᴇǫᴜᴇɴᴄᴇ sᴛᴀʀᴛᴇᴅ! sᴇɴᴅ ғɪʟᴇs.")
-    E_SEQUENCE_MSG = os.environ.get("E_SEQUENCE_MSG", "sᴇǫᴜᴇɴᴄᴇ ᴇɴᴅᴇᴅ! ᴘʀᴏᴄᴇssɪɴɢ...")
-    CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "sᴇǫᴜᴇɴᴄᴇ ᴄᴀɴᴄᴇʟʟᴇᴅ!")
+    S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "Sequence started! Send files.")
+    E_SEQUENCE_MSG = os.environ.get("E_SEQUENCE_MSG", "Sequence ended! Processing...")
+    CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "Sequence cancelled!")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "[ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʙᴏᴛsᴋɪɴɢᴅᴏᴍs](ʜᴛᴛᴘs://ᴛ.ᴍᴇ/ʙᴏᴛsᴋɪɴɢᴅᴏᴍs)")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "Powered By @Botskingdoms")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))

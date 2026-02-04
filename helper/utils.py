@@ -4,16 +4,24 @@ import re
 import os
 from datetime import datetime
 
-def small_caps(text):
+def big_and_nice(text):
     if not text:
         return ""
 
-    mapping = {
-        'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ',
-        'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ',
-        'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ғ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ',
-        'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ǫ', 'R': 'ʀ', 'S': 's', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ'
-    }
+    # Mathematical Sans-Serif Bold
+    # A-Z: U+1D5D4 - U+1D5ED
+    # a-z: U+1D5EE - U+1D607
+    # 0-9: U+1D7EC - U+1D7F5
+
+    def get_char(c):
+        o = ord(c)
+        if 65 <= o <= 90: # A-Z
+            return chr(o - 65 + 0x1D5D4)
+        if 97 <= o <= 122: # a-z
+            return chr(o - 97 + 0x1D5EE)
+        if 48 <= o <= 57: # 0-9
+            return chr(o - 48 + 0x1D7EC)
+        return c
 
     # Don't convert content inside HTML tags, placeholders, or markdown URLs
     result = ""
@@ -49,7 +57,7 @@ def small_caps(text):
         if is_tag or is_placeholder or is_url:
             result += char
         else:
-            result += mapping.get(char, char)
+            result += get_char(char)
         i += 1
 
     return result
@@ -57,11 +65,11 @@ def small_caps(text):
 def quote_text(text):
     if not text:
         return ""
-    # Automatically apply small caps
-    sc_text = small_caps(text)
+    # Automatically apply big and nice style
+    bn_text = big_and_nice(text)
     if "<blockquote>" in text:
         return text # Trust the source if it already has tags
-    return f"<blockquote>{sc_text}</blockquote>"
+    return f"<blockquote>{bn_text}</blockquote>"
 
 def humanbytes(size):
     if not size:
@@ -179,12 +187,12 @@ def get_fillings(message):
         except:
             fillings['html_caption'] = message.caption
 
-        # Also provide small caps versions
-        fillings['sc_caption'] = small_caps(message.caption)
+        # Also provide big and nice versions
+        fillings['bn_caption'] = big_and_nice(message.caption)
     else:
-        fillings['html_caption'] = "ɴ/ᴀ"
-        fillings['caption'] = "ɴ/ᴀ"
-        fillings['sc_caption'] = "ɴ/ᴀ"
+        fillings['html_caption'] = "N/A"
+        fillings['caption'] = "N/A"
+        fillings['bn_caption'] = "N/A"
 
     # Specific to Video
     if message.video:
