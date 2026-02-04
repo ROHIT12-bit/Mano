@@ -11,7 +11,8 @@ class Config:
     DB_NAME = os.environ.get("DB_NAME", "renamer_bot")
 
     # Bot owner/admins
-    ADMIN = [int(x) for x in os.environ.get("ADMIN", "").split() if x]
+    admins = [int(x) for x in os.environ.get("ADMIN", "").split() if x]
+    Botskingdoms = admins
 
     # Channel for force subscribe
     FORCE_SUB = os.environ.get("FORCE_SUB", "")

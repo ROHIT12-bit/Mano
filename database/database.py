@@ -14,8 +14,12 @@ class Database:
     async def get_admins(self):
         settings = await self.settings.find_one({'id': 'admin_list'})
         if settings:
-            return settings.get('admins', Config.ADMIN)
-        return Config.ADMIN
+            admins = settings.get('admins', Config.Botskingdoms)
+            Botskingdoms = admins
+            return Botskingdoms
+        admins = Config.Botskingdoms
+        Botskingdoms = admins
+        return Botskingdoms
 
     async def add_admin(self, admin_id):
         await self.settings.update_one({'id': 'admin_list'}, {'$addToSet': {'admins': int(admin_id)}}, upsert=True)

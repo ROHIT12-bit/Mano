@@ -40,7 +40,8 @@ async def leaderboard_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("addcredit"))
 async def add_credit_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 3:
         await message.reply_text("Usage: /addcredit [user_id] [amount]")
@@ -56,7 +57,8 @@ async def add_credit_cmd(client, message):
 @Client.on_message(filters.private & filters.command("remcredit"))
 async def rem_credit_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 3:
         await message.reply_text("Usage: /remcredit [user_id] [amount]")
@@ -72,7 +74,8 @@ async def rem_credit_cmd(client, message):
 @Client.on_message(filters.private & filters.command("add_premium"))
 async def add_premium_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 3:
         await message.reply_text("Usage: /add_premium [user_id] [days]")
@@ -89,7 +92,8 @@ async def add_premium_cmd(client, message):
 @Client.on_message(filters.private & filters.command("remove_premium"))
 async def remove_premium_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 2:
         await message.reply_text("Usage: /remove_premium [user_id]")
@@ -104,7 +108,8 @@ async def remove_premium_cmd(client, message):
 @Client.on_message(filters.private & filters.command("premium_users"))
 async def premium_users_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     all_users = await db.get_all_users()
     text = "<b>Premium Users:</b>\n\n"

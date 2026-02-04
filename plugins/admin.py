@@ -9,7 +9,8 @@ from database.database import db
 @Client.on_message(filters.private & filters.command("status"))
 async def status_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     users_count = await db.total_users_count()
     await message.reply_text(f"<b>Bot Status:</b>\n\nTotal Users: {users_count}\n\n{Config.CREDITS_LINE}")
@@ -17,7 +18,8 @@ async def status_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("users"))
 async def users_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     users_count = await db.total_users_count()
     await message.reply_text(f"Total Users: {users_count}\n\n{Config.CREDITS_LINE}")
@@ -25,7 +27,8 @@ async def users_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("broadcast"))
 async def broadcast_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if not message.reply_to_message:
         await message.reply_text("Reply to a message to broadcast.")
@@ -48,7 +51,8 @@ async def broadcast_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("ban"))
 async def ban_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 2:
         await message.reply_text("Usage: /ban [user_id]")
@@ -63,7 +67,8 @@ async def ban_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("unban"))
 async def unban_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 2:
         await message.reply_text("Usage: /unban [user_id]")
@@ -78,7 +83,8 @@ async def unban_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("restart"))
 async def restart_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     await message.reply_text("Restarting...")
     os.execl(sys.executable, sys.executable, *sys.argv)
@@ -86,7 +92,9 @@ async def restart_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("add_admin"))
 async def add_admin_cmd(client: Client, message: Message):
     # Only owner (from config) can add admins
-    if message.from_user.id not in Config.ADMIN:
+    admins = Config.Botskingdoms
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 2:
         await message.reply_text("Usage: /add_admin [user_id]")
@@ -101,14 +109,16 @@ async def add_admin_cmd(client: Client, message: Message):
 @Client.on_message(filters.private & filters.command("admin_mode"))
 async def admin_mode_cmd(client: Client, message: Message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     await message.reply_text(f"Admin mode is active for you.\n\n{Config.CREDITS_LINE}")
 
 @Client.on_message(filters.private & filters.command("shortlink"))
 async def shortlink_cmd(client, message):
     admins = await db.get_admins()
-    if message.from_user.id not in admins:
+    Botskingdoms = admins
+    if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 3:
         await message.reply_text("Usage: /shortlink [url] [api]")
