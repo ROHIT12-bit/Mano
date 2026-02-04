@@ -25,10 +25,10 @@ class Config:
     WORKERS = int(os.environ.get("WORKERS", "20"))
 
     # Default caption
-    DEF_CAP = os.environ.get("DEF_CAP", "<blockquote><b>{file_name}</b>\n\nBy @Botskingdoms</blockquote>")
+    DEF_CAP = os.environ.get("DEF_CAP", "<blockquote><b>{file_name}</b>\n\n<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote></blockquote>")
 
     # Messages
-    START_MSG = os.environ.get("START_MSG", "<blockquote>Hello {mention}!\n\nI am a fast Telegram Auto Renamer Bot.\n\nSend me any file to rename it.\n\n<b>By @Botskingdoms</b></blockquote>")
+    START_MSG = os.environ.get("START_MSG", "<blockquote>Hello {mention}!\n\nI am a fast Telegram Auto Renamer Bot.\n\nSend me any file to rename it.\n\n<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote></blockquote>")
     FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "<blockquote><b>Please Join My Update Channel to use this Bot!</b></blockquote>")
     HELP_MSG = os.environ.get("HELP_MSG", """<blockquote><b>Help Menu</b>
 
@@ -52,8 +52,8 @@ class Config:
 • {wish} - Wish (Morning/Evening)
 • {year}, {quality}, {language}, {season}, {episode} - Extracted from name
 
-<b>By @Botskingdoms</b></blockquote>""")
-    ABOUT_MSG = os.environ.get("ABOUT_MSG", "<blockquote><b>About This Bot</b>\n\nA powerful Telegram bot to rename files and change metadata.\n\nDeveloper: @Botskingdoms</blockquote>")
+<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote></blockquote>""")
+    ABOUT_MSG = os.environ.get("ABOUT_MSG", "<blockquote><b>About This Bot</b>\n\nA powerful Telegram bot to rename files and change metadata.\n\nDeveloper: <blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote></blockquote>")
 
     # Sequence Messages
     S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "<blockquote><b>File Sequencing Started!</b>\n\nSend me documents, videos, or audio files one by one. Use /esequence when done.</blockquote>")
@@ -61,7 +61,7 @@ class Config:
     CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "<blockquote><b>File Sequencing Cancelled!</b></blockquote>")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "By @Botskingdoms")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote>")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))

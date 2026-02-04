@@ -1,6 +1,6 @@
 {
   "name": "Botskingdoms Auto Renamer Bot",
-  "description": "A powerful Telegram bot to rename files and change metadata by @Botskingdoms.",
+  "description": "A powerful Telegram bot to rename files and change metadata by Botskingdoms.",
   "repository": "https://github.com/Botskingdoms/Auto-Renamer-Bot",
   "keywords": ["telegram", "renamer", "bot", "pyrogram", "metadata"],
   "env": {

@@ -11,7 +11,7 @@ async def plan_cmd(client: Client, message: Message):
            "1. Daily: 10 INR\n" \
            "2. Weekly: 50 INR\n" \
            "3. Monthly: 150 INR\n\n" \
-           f"Contact @Botskingdoms to buy.\n\n{Config.CREDITS_LINE}"
+           f"Contact {Config.CREDITS_LINE} to buy.\n\n{Config.CREDITS_LINE}"
     await message.reply_text(quote_text(text))
 
 @Client.on_message(filters.private & filters.command("premium"))
