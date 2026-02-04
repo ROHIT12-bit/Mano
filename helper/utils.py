@@ -2,6 +2,7 @@ import math
 import time
 import re
 import os
+import html
 from datetime import datetime
 from config import Config
 
@@ -28,7 +29,7 @@ def big_and_nice(text):
     # 5. Hashtags: #\w+
     # 6. Markdown URLs: \[[^\]]+\]\([^\)]+\)
 
-    combined_pattern = r'(<[^>]+>|\{[^\}]+\}|(?:http|https)://\S+|t\.me/\S+|@\w+|#\w+|\[[^\]]+\]\([^\)]+\))'
+    combined_pattern = r'(<[^>]+>|\{[^\}]+\}|(?:http|https)://\S+|t\.me/\S+|@\w+|#\w+|\[[^\]]+\]\([^\)]+\)|&[a-zA-Z0-9#]+;)'
 
     parts = re.split(combined_pattern, text)
     result = ""
@@ -42,22 +43,24 @@ def big_and_nice(text):
         else:
             # Transform characters in this part
             transformed_part = "".join(get_char(c) for c in part)
-            result += transformed_part
+            # Escape HTML special characters
+            result += html.escape(transformed_part)
 
     return result
 
 def quote_text(text):
     if not text:
         return ""
+
+    # Add credits if not present
+    if "Botskingdoms" not in text:
+        text += f"\n\n{Config.CREDITS_LINE}"
+
     # Automatically apply big and nice style
     bn_text = big_and_nice(text)
 
-    # Add credits if not present
-    if "Botskingdoms" not in bn_text:
-        bn_text += f"\n\n{Config.CREDITS_LINE}"
-
-    if "<blockquote>" in text:
-        return text # Trust the source if it already has tags
+    if "<blockquote>" in bn_text:
+        return bn_text
     return f"<blockquote>{bn_text}</blockquote>"
 
 def humanbytes(size):

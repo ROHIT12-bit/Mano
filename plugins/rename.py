@@ -1,6 +1,7 @@
 import os
 import time
 import asyncio
+import pyrogram
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, ForceReply
 from config import Config
@@ -21,7 +22,7 @@ async def handle_file(client: Client, message: Message):
 
     # Check if user is banned
     if await db.is_banned(user_id):
-        await message.reply_text(quote_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}"))
+        await message.reply_text(quote_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
         return
 
     file = getattr(message, message.media.value)
@@ -78,7 +79,7 @@ async def rename_cb(client, query):
 
 @Client.on_callback_query(filters.regex("cancel_rename"))
 async def cancel_rename_cb(client, query):
-    await query.message.edit_text(quote_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}"))
+    await query.message.edit_text(quote_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 async def process_rename(client, message, new_name):
     # Sanitize new_name to prevent path traversal
@@ -90,11 +91,11 @@ async def process_rename(client, message, new_name):
     if not is_premium:
         credits = await db.get_credits(user_id)
         if credits <= 0:
-            await message.reply_text(quote_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}"))
+            await message.reply_text(quote_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
             return
 
     # Download file
-    ms = await message.reply_text(quote_text("Trying to Download..."))
+    ms = await message.reply_text(quote_text("Trying to Download..."), parse_mode=pyrogram.enums.ParseMode.HTML)
     path = os.path.join("downloads", str(user_id), str(time.time()))
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -184,6 +185,7 @@ async def process_rename(client, message, new_name):
                 duration=duration,
                 width=width,
                 height=height,
+                parse_mode=pyrogram.enums.ParseMode.HTML,
                 progress=progress_for_pyrogram,
                 progress_args=(quote_text("Uploading..."), ms, start_time)
             )
@@ -193,6 +195,7 @@ async def process_rename(client, message, new_name):
                 document=file_path,
                 caption=caption,
                 thumb=thumbnail,
+                parse_mode=pyrogram.enums.ParseMode.HTML,
                 progress=progress_for_pyrogram,
                 progress_args=(quote_text("Uploading..."), ms, start_time)
             )
@@ -218,19 +221,19 @@ async def process_rename(client, message, new_name):
 @Client.on_message(filters.private & filters.command("autorename"))
 async def autorename_cmd(client, message):
     if len(message.command) < 2:
-        await message.reply_text(quote_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]"))
+        await message.reply_text(quote_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]"), parse_mode=pyrogram.enums.ParseMode.HTML)
         return
     format = message.text.split(" ", 1)[1]
     await db.set_autorename_format(message.from_user.id, format)
-    await message.reply_text(quote_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}"))
+    await message.reply_text(quote_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("showformat"))
 async def showformat_cmd(client, message):
     format = await db.get_autorename_format(message.from_user.id)
     if format:
-        await message.reply_text(quote_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}"))
+        await message.reply_text(quote_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
     else:
-        await message.reply_text(quote_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}"))
+        await message.reply_text(quote_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("setmedia"))
 async def setmedia_cmd(client, message):
@@ -246,7 +249,7 @@ async def setmedia_cmd(client, message):
 async def media_cb(client, query):
     media_type = query.data.split("_")[1]
     await db.set_media_type(query.from_user.id, media_type)
-    await query.message.edit_text(quote_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}"))
+    await query.message.edit_text(quote_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task(client, message):
@@ -255,21 +258,21 @@ async def cancel_task(client, message):
 
     if await db.is_sequencing(user_id):
         await db.stop_sequence(user_id)
-        await message.reply_text(quote_text(Config.CANCEL_SEQUENCE_MSG))
+        await message.reply_text(quote_text(Config.CANCEL_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML)
         cancelled = True
 
     if user_id in ongoing_tasks and ongoing_tasks[user_id]:
         for task in ongoing_tasks[user_id]:
             task.cancel()
         ongoing_tasks[user_id] = []
-        await message.reply_text(quote_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}"))
+        await message.reply_text(quote_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
         cancelled = True
 
     if not cancelled:
-        await message.reply_text(quote_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}"))
+        await message.reply_text(quote_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("queue"))
 async def queue_cmd(client, message):
     user_id = message.from_user.id
     count = len(ongoing_tasks.get(user_id, []))
-    await message.reply_text(quote_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}"))
+    await message.reply_text(quote_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)

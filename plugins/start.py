@@ -4,6 +4,7 @@ from config import Config
 from database.database import db
 from helper.utils import quote_text, big_and_nice
 import pyrogram
+import html
 
 def get_start_buttons():
     return InlineKeyboardMarkup([
@@ -36,23 +37,25 @@ async def start(client: Client, message: Message):
         try:
             user_member = await client.get_chat_member(Config.FORCE_SUB, user.id)
             if user_member.status == "kicked":
-                await message.reply_text(quote_text("Sorry, you are banned from using me."))
+                await message.reply_text(quote_text("Sorry, you are banned from using me."), parse_mode=pyrogram.enums.ParseMode.HTML)
                 return
         except Exception:
             await message.reply_photo(
                 photo=Config.FORCE_SUB_PIC,
                 caption=quote_text(Config.FORCE_SUB_MSG),
+                parse_mode=pyrogram.enums.ParseMode.HTML,
                 reply_markup=InlineKeyboardMarkup(
                     [[InlineKeyboardButton("Join Updates Channel", url=f"https://t.me/{Config.FORCE_SUB}")]]
                 )
             )
             return
 
-    text = quote_text(Config.START_MSG.format(mention=user.mention))
+    mention = f'<a href="tg://user?id={user.id}">{html.escape(user.first_name)}</a>'
+    text = quote_text(Config.START_MSG.format(mention=mention))
     buttons = get_start_buttons()
 
     if Config.START_PIC:
-        await message.reply_photo(photo=Config.START_PIC, caption=text, reply_markup=buttons)
+        await message.reply_photo(photo=Config.START_PIC, caption=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
     else:
         await message.reply_text(text=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
 
@@ -69,29 +72,30 @@ async def info(client: Client, message: Message):
            f"Renames: {user_data.get('rename_count', 0)}\n\n" \
            f"{Config.CREDITS_LINE}"
 
-    await message.reply_text(quote_text(text))
+    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("source"))
 async def source_cmd(client: Client, message: Message):
     text = f"This bot is open source. You can find the source code on GitHub.\n\n{Config.CREDITS_LINE}"
-    await message.reply_text(quote_text(text))
+    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("about"))
 async def about(client, query):
     text = quote_text(Config.ABOUT_MSG)
-    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("help"))
 async def help_cmd(client, query):
     text = quote_text(Config.HELP_MSG)
-    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("start"))
 async def start_back(client, query):
     user = query.from_user
-    text = quote_text(Config.START_MSG.format(mention=user.mention))
+    mention = f'<a href="tg://user?id={user.id}">{html.escape(user.first_name)}</a>'
+    text = quote_text(Config.START_MSG.format(mention=mention))
     buttons = get_start_buttons()
-    await query.message.edit_caption(text, reply_markup=buttons)
+    await query.message.edit_caption(text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("admin_info"))
 async def admin_info_cb(client, query):
@@ -101,7 +105,7 @@ async def admin_info_cb(client, query):
 @Client.on_callback_query(filters.regex("plan_callback"))
 async def plan_callback(client, query):
     text = quote_text("<b>Premium Plans:</b>\n\n1. Daily: 10 INR\n2. Weekly: 50 INR\n3. Monthly: 150 INR\n\nContact @Botskingdoms to buy.")
-    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("premium_callback"))
 async def premium_callback(client, query):
@@ -115,4 +119,4 @@ async def premium_callback(client, query):
 @Client.on_callback_query(filters.regex("source_info"))
 async def source_info_cb(client, query):
     text = quote_text(f"Bot Source: Private\nDeveloper: @Botskingdoms\n\n{Config.CREDITS_LINE}")
-    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
+    await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
