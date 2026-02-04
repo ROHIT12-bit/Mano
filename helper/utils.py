@@ -4,6 +4,11 @@ import re
 import os
 from datetime import datetime
 
+def quote_text(text):
+    if not text:
+        return ""
+    return f"<blockquote>{text}</blockquote>"
+
 def humanbytes(size):
     if not size:
         return "0 B"
@@ -46,7 +51,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
         )
         try:
             await message.edit(
-                text="{}\n {}".format(ud_type, tmp)
+                text=quote_text("{}\n {}".format(ud_type, tmp))
             )
         except:
             pass

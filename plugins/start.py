@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from config import Config
 from database.database import db
+from helper.utils import quote_text
 
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client: Client, message: Message):
@@ -14,7 +15,7 @@ async def start(client: Client, message: Message):
         try:
             user_member = await client.get_chat_member(Config.FORCE_SUB, user.id)
             if user_member.status == "kicked":
-                await message.reply_text("Sorry, you are banned from using me.")
+                await message.reply_text(quote_text("Sorry, you are banned from using me."))
                 return
         except Exception:
             await message.reply_photo(
@@ -52,12 +53,12 @@ async def info(client: Client, message: Message):
            f"Renames: {user_data.get('rename_count', 0)}\n\n" \
            f"{Config.CREDITS_LINE}"
 
-    await message.reply_text(text)
+    await message.reply_text(quote_text(text))
 
 @Client.on_message(filters.private & filters.command("source"))
 async def source(client: Client, message: Message):
     text = f"This bot is open source. You can find the source code on GitHub.\n\n{Config.CREDITS_LINE}"
-    await message.reply_text(text)
+    await message.reply_text(quote_text(text))
 
 @Client.on_callback_query(filters.regex("about"))
 async def about(client, query):

@@ -5,7 +5,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, ForceReply
 from config import Config
 from database.database import db
-from helper.utils import progress_for_pyrogram, humanbytes, get_fillings
+from helper.utils import progress_for_pyrogram, humanbytes, get_fillings, quote_text
 from helper.ffmpeg import add_metadata, get_duration, get_width_height, take_screen_shot
 
 # Dictionary to store ongoing tasks for cancellation
@@ -21,7 +21,7 @@ async def handle_file(client: Client, message: Message):
 
     # Check if user is banned
     if await db.is_banned(user_id):
-        await message.reply_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}")
+        await message.reply_text(quote_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}"))
         return
 
     file = getattr(message, message.media.value)
@@ -45,7 +45,7 @@ async def handle_file(client: Client, message: Message):
         await process_rename(client, message, new_name)
     else:
         await message.reply_text(
-            f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?",
+            quote_text(f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?"),
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("📝 Rename", callback_data="rename_manual")],
                 [InlineKeyboardButton("✖️ Cancel", callback_data="cancel_rename")]
@@ -57,7 +57,7 @@ async def handle_file(client: Client, message: Message):
 async def rename_manual_cb(client, query):
     await query.message.delete()
     await query.message.reply_text(
-        "Please enter the new name for the file:",
+        quote_text("Please enter the new name for the file:"),
         reply_markup=ForceReply(True),
         reply_to_message_id=query.message.reply_to_message.id
     )
@@ -78,7 +78,7 @@ async def rename_cb(client, query):
 
 @Client.on_callback_query(filters.regex("cancel_rename"))
 async def cancel_rename_cb(client, query):
-    await query.message.edit_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}")
+    await query.message.edit_text(quote_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}"))
 
 async def process_rename(client, message, new_name):
     # Sanitize new_name to prevent path traversal
@@ -90,11 +90,11 @@ async def process_rename(client, message, new_name):
     if not is_premium:
         credits = await db.get_credits(user_id)
         if credits <= 0:
-            await message.reply_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}")
+            await message.reply_text(quote_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}"))
             return
 
     # Download file
-    ms = await message.reply_text("Trying to Download...")
+    ms = await message.reply_text(quote_text("Trying to Download..."))
     path = os.path.join("downloads", str(user_id), str(time.time()))
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -112,25 +112,25 @@ async def process_rename(client, message, new_name):
         file_path = await message.download(
             file_name=download_path,
             progress=progress_for_pyrogram,
-            progress_args=("Downloading...", ms, start_time)
+            progress_args=(quote_text("Downloading..."), ms, start_time)
         )
     except Exception as e:
-        await ms.edit(f"Download Error: {e}\n\n{Config.CREDITS_LINE}")
+        await ms.edit(quote_text(f"Download Error: {e}\n\n{Config.CREDITS_LINE}"))
         return
     finally:
         if user_id in ongoing_tasks and task in ongoing_tasks[user_id]:
             ongoing_tasks[user_id].remove(task)
 
     if not file_path:
-        await ms.edit(f"Download failed.\n\n{Config.CREDITS_LINE}")
+        await ms.edit(quote_text(f"Download failed.\n\n{Config.CREDITS_LINE}"))
         return
 
-    await ms.edit("Applying Settings...")
+    await ms.edit(quote_text("Applying Settings..."))
 
     # Metadata
     metadata_text, metadata_status = await db.get_metadata(user_id)
     if metadata_status and metadata_text:
-        await ms.edit("Adding Metadata...")
+        await ms.edit(quote_text("Adding Metadata..."))
         meta_path = os.path.join(path, "meta_" + new_name)
         await add_metadata(file_path, meta_path, metadata_text)
         os.remove(file_path)
@@ -165,7 +165,7 @@ async def process_rename(client, message, new_name):
     # Media Type
     media_type = await db.get_media_type(user_id)
 
-    await ms.edit("Uploading...")
+    await ms.edit(quote_text("Uploading..."))
     start_time = time.time()
 
     try:
@@ -181,7 +181,7 @@ async def process_rename(client, message, new_name):
                 width=width,
                 height=height,
                 progress=progress_for_pyrogram,
-                progress_args=("Uploading...", ms, start_time)
+                progress_args=(quote_text("Uploading..."), ms, start_time)
             )
         else:
             await client.send_document(
@@ -190,10 +190,10 @@ async def process_rename(client, message, new_name):
                 caption=caption,
                 thumb=thumbnail,
                 progress=progress_for_pyrogram,
-                progress_args=("Uploading...", ms, start_time)
+                progress_args=(quote_text("Uploading..."), ms, start_time)
             )
     except Exception as e:
-        await ms.edit(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}")
+        await ms.edit(quote_text(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}"))
     else:
         await ms.delete()
         # Increment rename count and decrease credits
@@ -214,24 +214,24 @@ async def process_rename(client, message, new_name):
 @Client.on_message(filters.private & filters.command("autorename"))
 async def autorename_cmd(client, message):
     if len(message.command) < 2:
-        await message.reply_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]")
+        await message.reply_text(quote_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]"))
         return
     format = message.text.split(" ", 1)[1]
     await db.set_autorename_format(message.from_user.id, format)
-    await message.reply_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}")
+    await message.reply_text(quote_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}"))
 
 @Client.on_message(filters.private & filters.command("showformat"))
 async def showformat_cmd(client, message):
     format = await db.get_autorename_format(message.from_user.id)
     if format:
-        await message.reply_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}")
+        await message.reply_text(quote_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}"))
     else:
-        await message.reply_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}")
+        await message.reply_text(quote_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}"))
 
 @Client.on_message(filters.private & filters.command("setmedia"))
 async def setmedia_cmd(client, message):
     await message.reply_text(
-        "Choose allowed media types for upload:",
+        quote_text("Choose allowed media types for upload:"),
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("Document", callback_data="media_document"),
              InlineKeyboardButton("Video", callback_data="media_video")]
@@ -242,7 +242,7 @@ async def setmedia_cmd(client, message):
 async def media_cb(client, query):
     media_type = query.data.split("_")[1]
     await db.set_media_type(query.from_user.id, media_type)
-    await query.message.edit_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}")
+    await query.message.edit_text(quote_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}"))
 
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task(client, message):
@@ -258,14 +258,14 @@ async def cancel_task(client, message):
         for task in ongoing_tasks[user_id]:
             task.cancel()
         ongoing_tasks[user_id] = []
-        await message.reply_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}")
+        await message.reply_text(quote_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}"))
         cancelled = True
 
     if not cancelled:
-        await message.reply_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}")
+        await message.reply_text(quote_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}"))
 
 @Client.on_message(filters.private & filters.command("queue"))
 async def queue_cmd(client, message):
     user_id = message.from_user.id
     count = len(ongoing_tasks.get(user_id, []))
-    await message.reply_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}")
+    await message.reply_text(quote_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}"))
