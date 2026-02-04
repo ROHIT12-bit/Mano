@@ -146,33 +146,59 @@ def get_wish():
     else:
         return "Good Night"
 
+class Fillings(dict):
+    def __missing__(self, key):
+        return "N/A"
+
 def get_file_info(filename):
     # Regex patterns for common metadata in filenames
     year_match = re.search(r'(19|20)\d{2}', filename)
     quality_match = re.search(r'(\d{3,4}p|BRRip|Web-DL|WEB-DL|HDRip|DVDRip|BluRay)', filename, re.IGNORECASE)
     season_match = re.search(r'S(\d{1,2})', filename, re.IGNORECASE)
-    episode_match = re.search(r'E(\d{1,3})', filename, re.IGNORECASE)
-    language_match = re.search(r'(Hindi|English|Tamil|Telugu|Kannada|Malayalam|Bengali|Marathi|Punjabi|dual)', filename, re.IGNORECASE)
+    episode_match = re.search(r'E(\d{1,3})|(?<=\s)(\d{1,3})(?=\s|\[|\()', filename, re.IGNORECASE)
+    language_match = re.search(r'(Hindi|English|Tamil|Telugu|Kannada|Malayalam|Bengali|Marathi|Punjabi|dual|Eng-Jap|Jap-Eng|Sub|Dub)', filename, re.IGNORECASE)
+
+    episode = "N/A"
+    if episode_match:
+        episode = episode_match.group(1) if episode_match.group(1) else episode_match.group(2)
 
     return {
         'year': year_match.group(0) if year_match else "N/A",
         'quality': quality_match.group(0) if quality_match else "N/A",
         'season': season_match.group(1) if season_match else "N/A",
-        'episode': episode_match.group(1) if episode_match else "N/A",
+        'episode': episode,
         'language': language_match.group(0) if language_match else "N/A"
     }
 
 def get_fillings(message):
-    fillings = {}
+    fillings = Fillings()
+
+    # Initialize all possible keys with N/A
+    all_keys = [
+        'filename', 'file_name', 'filesize', 'duration', 'height', 'width', 'resolution', 'ext', 'mime_type',
+        'title', 'artist', 'caption', 'html_caption', 'bn_caption', 'language', 'year', 'quality', 'season', 'episode', 'wish'
+    ]
+    for key in all_keys:
+        fillings[key] = "N/A"
 
     # Common
     fillings['wish'] = get_wish()
+
+    # Text Message (if no media)
+    if not message.media and message.text:
+        fillings['caption'] = message.text
+        try:
+            fillings['html_caption'] = message.text.html
+        except:
+            fillings['html_caption'] = message.text
+        fillings['bn_caption'] = big_and_nice(message.text)
 
     # File name and extension
     file = getattr(message, message.media.value) if message.media else None
     if file:
         filename = getattr(file, 'file_name', 'None')
         fillings['filename'] = filename
+        fillings['file_name'] = filename # Support both
         fillings['filesize'] = humanbytes(getattr(file, 'file_size', 0))
         fillings['mime_type'] = getattr(file, 'mime_type', 'N/A')
         ext = os.path.splitext(filename)[1].replace('.', '') if '.' in filename else 'None'
@@ -182,7 +208,7 @@ def get_fillings(message):
         info = get_file_info(filename)
         fillings.update(info)
 
-    # Caption logic
+    # Caption logic (if it's a media message with caption)
     if message.caption:
         fillings['caption'] = message.caption
         try:
@@ -190,10 +216,6 @@ def get_fillings(message):
         except:
             fillings['html_caption'] = message.caption
         fillings['bn_caption'] = big_and_nice(message.caption)
-    else:
-        fillings['html_caption'] = "N/A"
-        fillings['caption'] = "N/A"
-        fillings['bn_caption'] = "N/A"
 
     # Specific to Video
     if message.video:
@@ -201,20 +223,28 @@ def get_fillings(message):
         fillings['height'] = message.video.height
         fillings['width'] = message.video.width
         fillings['resolution'] = f"{message.video.width}x{message.video.height}"
+        fillings['mime_type'] = message.video.mime_type if message.video.mime_type else "video/mp4"
 
     # Specific to Audio
     if message.audio:
         fillings['duration'] = TimeFormatter(message.audio.duration * 1000)
         fillings['title'] = message.audio.title if message.audio.title else "N/A"
         fillings['artist'] = message.audio.artist if message.audio.artist else "N/A"
+        fillings['mime_type'] = message.audio.mime_type if message.audio.mime_type else "audio/mpeg"
 
     # Specific to Photo
     if message.photo:
         fillings['filesize'] = humanbytes(message.photo.file_size)
         fillings['width'] = message.photo.width
         fillings['height'] = message.photo.height
-        if 'filename' not in fillings:
+        fillings['mime_type'] = "image/jpeg"
+        if fillings['filename'] == "N/A" or fillings['filename'] == "None":
              fillings['filename'] = "photo.jpg"
+             fillings['file_name'] = "photo.jpg"
              fillings['ext'] = "jpg"
+
+    # Specific to Document
+    if message.document:
+        fillings['mime_type'] = message.document.mime_type if message.document.mime_type else "application/octet-stream"
 
     return fillings

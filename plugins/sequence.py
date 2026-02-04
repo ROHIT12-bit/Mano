@@ -35,6 +35,8 @@ async def end_sequence_cmd(client: Client, message: Message):
                 await client.send_video(message.chat.id, video=file['file_id'], caption=caption, parse_mode=pyrogram.enums.ParseMode.HTML)
             elif file['media_type'] == "audio":
                 await client.send_audio(message.chat.id, audio=file['file_id'], caption=caption, parse_mode=pyrogram.enums.ParseMode.HTML)
+            elif file['media_type'] == "photo":
+                await client.send_photo(message.chat.id, photo=file['file_id'], caption=caption, parse_mode=pyrogram.enums.ParseMode.HTML)
             else:
                 await client.send_document(message.chat.id, document=file['file_id'], caption=caption, parse_mode=pyrogram.enums.ParseMode.HTML)
         except Exception as e:
@@ -58,11 +60,12 @@ async def stats_cmd(client: Client, message: Message):
            f"{Config.CREDITS_LINE}"
     await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
 
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio), group=-1)
+@Client.on_message(filters.private & (filters.document | filters.video | filters.audio | filters.photo), group=-1)
 async def collection_handler(client: Client, message: Message):
     if await db.is_sequencing(message.from_user.id):
         file = getattr(message, message.media.value)
-        await db.add_to_sequence(message.from_user.id, file.file_id, file.file_name, message.media.value)
-        await message.reply_text(quote_text(f"Added to sequence: <code>{file.file_name}</code>"), quote=True, parse_mode=pyrogram.enums.ParseMode.HTML)
+        filename = getattr(file, "file_name", "photo.jpg")
+        await db.add_to_sequence(message.from_user.id, file.file_id, filename, message.media.value)
+        await message.reply_text(quote_text(f"Added to sequence: <code>{filename}</code>"), quote=True, parse_mode=pyrogram.enums.ParseMode.HTML)
         # Stop propagation so rename.py doesn't catch it
         message.stop_propagation()

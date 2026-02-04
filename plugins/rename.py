@@ -12,7 +12,7 @@ from helper.ffmpeg import add_metadata, get_duration, get_width_height, take_scr
 # Dictionary to store ongoing tasks for cancellation
 ongoing_tasks = {}
 
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
+@Client.on_message(filters.private & (filters.document | filters.video | filters.audio | filters.photo))
 async def handle_file(client: Client, message: Message):
     user_id = message.from_user.id
 
@@ -26,7 +26,7 @@ async def handle_file(client: Client, message: Message):
         return
 
     file = getattr(message, message.media.value)
-    filename = file.file_name
+    filename = getattr(file, "file_name", "photo.jpg")
     fillings = get_fillings(message)
 
     # Check for autorename
@@ -34,15 +34,23 @@ async def handle_file(client: Client, message: Message):
     if autorename_format:
         # Auto rename logic
         try:
-            new_name = autorename_format.format(**fillings)
-        except Exception:
-            new_name = autorename_format.replace("{file_name}", os.path.splitext(filename)[0])
+            new_name = autorename_format.format_map(fillings)
+        except Exception as e:
+            # Fallback for manual replacement of common keys if format_map fails
+            new_name = autorename_format
+            for key, value in fillings.items():
+                new_name = new_name.replace(f"{{{key}}}", str(value))
+
+        # Ensure we don't have empty new_name
+        if not new_name or new_name.strip() == autorename_format.strip():
+             new_name = autorename_format.replace("{file_name}", os.path.splitext(filename)[0])
 
         # Add extension if not present in format or just append original extension
         if "." not in new_name:
              new_name += os.path.splitext(filename)[1]
 
         # Truly automatic: Start processing immediately
+        await message.reply_text(quote_text(f"<b>Auto-Rename Detected!</b>\n\n<b>New Name:</b> <code>{new_name}</code>"), parse_mode=pyrogram.enums.ParseMode.HTML)
         await process_rename(client, message, new_name)
     else:
         await message.reply_text(quote_text(f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?"),
@@ -150,14 +158,14 @@ async def process_rename(client, message, new_name):
     user_caption = await db.get_caption(user_id)
     if user_caption:
         try:
-            caption = user_caption.format(**fillings)
+            caption = user_caption.format_map(fillings)
         except Exception:
-            caption = user_caption.format(file_name=new_name, file_size=fillings['file_size'])
+            caption = user_caption.replace("{file_name}", new_name).replace("{file_size}", fillings['file_size'])
     else:
         try:
-            caption = Config.DEF_CAP.format(**fillings)
+            caption = Config.DEF_CAP.format_map(fillings)
         except Exception:
-            caption = Config.DEF_CAP.format(file_name=new_name)
+            caption = Config.DEF_CAP.replace("{file_name}", new_name)
 
     # Apply branding and blockquote to caption if not already present
     if "<blockquote>" not in caption:
