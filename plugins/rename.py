@@ -255,7 +255,7 @@ async def cancel_task(client, message):
 
     if await db.is_sequencing(user_id):
         await db.stop_sequence(user_id)
-        await message.reply_text(Config.CANCEL_SEQUENCE_MSG)
+        await message.reply_text(quote_text(Config.CANCEL_SEQUENCE_MSG))
         cancelled = True
 
     if user_id in ongoing_tasks and ongoing_tasks[user_id]:

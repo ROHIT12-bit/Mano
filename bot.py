@@ -51,6 +51,7 @@ class Bot(Client):
                 BotCommand("set_caption", "Set custom caption"),
                 BotCommand("see_caption", "View current caption"),
                 BotCommand("del_caption", "Delete caption"),
+                BotCommand("trial", "Activate 24-hour premium trial"),
                 BotCommand("meta", "Set metadata text"),
                 BotCommand("setallmeta", "Apply metadata to all fields"),
                 BotCommand("metaon", "Enable metadata"),
