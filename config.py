@@ -15,7 +15,7 @@ class Config:
     Botskingdoms = admins
 
     # Channel for force subscribe
-    FORCE_SUB = os.environ.get("FORCE_SUB", "-1003790363380")
+    FORCE_SUB = os.environ.get("FORCE_SUB", "RohitXmax")
     FORCE_SUB_PIC = os.environ.get("FORCE_SUB_PIC", "https://i.rj1.dev/aMNXA.jpg")
 
     # Start pic
