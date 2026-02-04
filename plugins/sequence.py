@@ -10,7 +10,7 @@ async def start_sequence_cmd(client: Client, message: Message):
         await message.reply_text(quote_text("You are already in a file sequencing session."))
         return
     await db.start_sequence(message.from_user.id)
-    await message.reply_text(Config.S_SEQUENCE_MSG)
+    await message.reply_text(quote_text(Config.S_SEQUENCE_MSG))
 
 @Client.on_message(filters.private & filters.command("esequence"))
 async def end_sequence_cmd(client: Client, message: Message):
@@ -24,7 +24,7 @@ async def end_sequence_cmd(client: Client, message: Message):
         await message.reply_text(quote_text("No files were sent. Sequencing session ended."))
         return
 
-    await message.reply_text(Config.E_SEQUENCE_MSG)
+    await message.reply_text(quote_text(Config.E_SEQUENCE_MSG))
 
     # Send files in order
     for i, file in enumerate(files, 1):

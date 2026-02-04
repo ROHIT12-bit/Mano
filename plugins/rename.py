@@ -162,6 +162,10 @@ async def process_rename(client, message, new_name):
         except Exception:
             caption = Config.DEF_CAP.format(file_name=new_name)
 
+    # Apply branding and blockquote to caption if not already present
+    if "<blockquote>" not in caption:
+        caption = quote_text(caption)
+
     # Media Type
     media_type = await db.get_media_type(user_id)
 

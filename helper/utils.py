@@ -4,10 +4,64 @@ import re
 import os
 from datetime import datetime
 
+def small_caps(text):
+    if not text:
+        return ""
+
+    mapping = {
+        'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ',
+        'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ',
+        'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ғ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ',
+        'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ǫ', 'R': 'ʀ', 'S': 's', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ'
+    }
+
+    # Don't convert content inside HTML tags, placeholders, or markdown URLs
+    result = ""
+    is_tag = False
+    is_placeholder = False
+    is_url = False
+
+    i = 0
+    while i < len(text):
+        char = text[i]
+        if char == '<':
+            is_tag = True
+        elif char == '>':
+            is_tag = False
+            result += char
+            i += 1
+            continue
+        elif char == '{':
+            is_placeholder = True
+        elif char == '}':
+            is_placeholder = False
+            result += char
+            i += 1
+            continue
+        elif char == '(' and i > 0 and text[i-1] == ']':
+            is_url = True
+        elif char == ')' and is_url:
+            is_url = False
+            result += char
+            i += 1
+            continue
+
+        if is_tag or is_placeholder or is_url:
+            result += char
+        else:
+            result += mapping.get(char, char)
+        i += 1
+
+    return result
+
 def quote_text(text):
     if not text:
         return ""
-    return f"<blockquote>{text}</blockquote>"
+    # Automatically apply small caps
+    sc_text = small_caps(text)
+    if "<blockquote>" in text:
+        return text # Trust the source if it already has tags
+    return f"<blockquote>{sc_text}</blockquote>"
 
 def humanbytes(size):
     if not size:
@@ -117,16 +171,20 @@ def get_fillings(message):
 
     # Caption logic
     if message.caption:
+        # We store the raw caption text and html
         fillings['caption'] = message.caption
-        # In newer Pyrogram, html is available via message.caption.html if entities exist
-        # But if it's just a string, we handle it
         try:
+            # entities to html
             fillings['html_caption'] = message.caption.html
         except:
             fillings['html_caption'] = message.caption
+
+        # Also provide small caps versions
+        fillings['sc_caption'] = small_caps(message.caption)
     else:
-        fillings['html_caption'] = "N/A"
-        fillings['caption'] = "N/A"
+        fillings['html_caption'] = "ɴ/ᴀ"
+        fillings['caption'] = "ɴ/ᴀ"
+        fillings['sc_caption'] = "ɴ/ᴀ"
 
     # Specific to Video
     if message.video:

@@ -3,6 +3,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from config import Config
 from database.database import db
 from helper.utils import quote_text
+import pyrogram
 
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client: Client, message: Message):
@@ -20,14 +21,14 @@ async def start(client: Client, message: Message):
         except Exception:
             await message.reply_photo(
                 photo=Config.FORCE_SUB_PIC,
-                caption=Config.FORCE_SUB_MSG,
+                caption=quote_text(Config.FORCE_SUB_MSG),
                 reply_markup=InlineKeyboardMarkup(
                     [[InlineKeyboardButton("Join Updates Channel", url=f"https://t.me/{Config.FORCE_SUB}")]]
                 )
             )
             return
 
-    text = Config.START_MSG.format(mention=user.mention)
+    text = quote_text(Config.START_MSG.format(mention=user.mention))
     buttons = InlineKeyboardMarkup([
         [InlineKeyboardButton("Updates", url="https://t.me/Botskingdoms"),
          InlineKeyboardButton("Support", url="https://t.me/Botskingdoms_Support")],
@@ -38,7 +39,7 @@ async def start(client: Client, message: Message):
     if Config.START_PIC:
         await message.reply_photo(photo=Config.START_PIC, caption=text, reply_markup=buttons)
     else:
-        await message.reply_text(text=text, reply_markup=buttons)
+        await message.reply_text(text=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.command("info"))
 async def info(client: Client, message: Message):
@@ -62,7 +63,7 @@ async def source(client: Client, message: Message):
 
 @Client.on_callback_query(filters.regex("about"))
 async def about(client, query):
-    text = Config.ABOUT_MSG
+    text = quote_text(Config.ABOUT_MSG)
     if query.message.photo:
         await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
     else:
@@ -70,7 +71,7 @@ async def about(client, query):
 
 @Client.on_callback_query(filters.regex("help"))
 async def help_cmd(client, query):
-    text = Config.HELP_MSG
+    text = quote_text(Config.HELP_MSG)
     if query.message.photo:
         await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]))
     else:
@@ -79,7 +80,7 @@ async def help_cmd(client, query):
 @Client.on_callback_query(filters.regex("start"))
 async def start_back(client, query):
     user = query.from_user
-    text = Config.START_MSG.format(mention=user.mention)
+    text = quote_text(Config.START_MSG.format(mention=user.mention))
     buttons = InlineKeyboardMarkup([
         [InlineKeyboardButton("Updates", url="https://t.me/Botskingdoms"),
          InlineKeyboardButton("Support", url="https://t.me/Botskingdoms_Support")],
