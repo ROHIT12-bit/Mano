@@ -1,0 +1,47 @@
+{
+  "name": "Botskingdoms Auto Renamer Bot",
+  "description": "A powerful Telegram bot to rename files and change metadata by @Botskingdoms.",
+  "repository": "https://github.com/Botskingdoms/Auto-Renamer-Bot",
+  "keywords": ["telegram", "renamer", "bot", "pyrogram", "metadata"],
+  "env": {
+    "API_ID": {
+      "description": "Your Telegram API ID",
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Your Telegram API Hash",
+      "value": ""
+    },
+    "BOT_TOKEN": {
+      "description": "Your Telegram Bot Token",
+      "value": ""
+    },
+    "DB_URL": {
+      "description": "Your MongoDB URL",
+      "value": ""
+    },
+    "ADMIN": {
+      "description": "Admin IDs separated by space",
+      "value": ""
+    },
+    "FORCE_SUB": {
+      "description": "Force subscribe channel username without @",
+      "value": ""
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    }
+  ]
+}

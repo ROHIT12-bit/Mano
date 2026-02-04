@@ -1,6 +1,9 @@
 import motor.motor_asyncio
 from config import Config
 import time
+import logging
+
+logger = logging.getLogger("Botskingdoms")
 
 class Database:
     def __init__(self, uri, database_name):

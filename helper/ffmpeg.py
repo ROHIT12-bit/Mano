@@ -1,8 +1,11 @@
 import os
 import subprocess
 import asyncio
+import logging
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
+
+logger = logging.getLogger("Botskingdoms")
 
 async def fix_thumbnail(thumbnail_path):
     # This function would use ffmpeg to resize the thumbnail if needed

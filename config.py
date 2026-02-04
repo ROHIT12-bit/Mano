@@ -8,7 +8,7 @@ class Config:
     API_HASH = os.environ.get("API_HASH", "")
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
     DB_URL = os.environ.get("DB_URL", "")
-    DB_NAME = os.environ.get("DB_NAME", "renamer_bot")
+    DB_NAME = os.environ.get("DB_NAME", "Botskingdoms_Renamer")
 
     # Bot owner/admins
     admins = [int(x) for x in os.environ.get("ADMIN", "").split() if x]
