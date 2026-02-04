@@ -46,7 +46,7 @@ async def get_thumb_cmd(client: Client, message: Message):
             await message.reply_photo(photo=thumb_path, caption=quote_text(f"Extracted thumbnail.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
             os.remove(thumb_path)
         else:
-            await ms.edit(quote_text(f"Failed to extract thumbnail.\n\n{Config.CREDITS_LINE}"))
+            await ms.edit(quote_text(f"Failed to extract thumbnail.\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
         os.remove(file_path)
     else:
         # If it's a document with a thumbnail
@@ -54,5 +54,5 @@ async def get_thumb_cmd(client: Client, message: Message):
             thumb_id = file.document.thumbs[0].file_id
             await message.reply_photo(photo=thumb_id, caption=quote_text(f"Extracted thumbnail from document.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
         else:
-            await ms.edit(quote_text(f"This document has no thumbnail.\n\n{Config.CREDITS_LINE}"))
+            await ms.edit(quote_text(f"This document has no thumbnail.\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
     await ms.delete()

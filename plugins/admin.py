@@ -53,7 +53,7 @@ async def broadcast_cmd(client: Client, message: Message):
         except:
             failed += 1
 
-    await ms.edit(quote_text(f"<b>Broadcast Completed:</b>\n\nSuccess: {success}\nFailed: {failed}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await ms.edit(quote_text(f"<b>Broadcast Completed:</b>\n\nSuccess: {success}\nFailed: {failed}\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
 
 @Client.on_message(filters.private & filters.command("ban"))
 async def ban_cmd(client: Client, message: Message):

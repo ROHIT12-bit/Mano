@@ -1,25 +1,26 @@
 import os
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class Config:
-    API_ID = int(os.environ.get("API_ID", "20366634"))
-    API_HASH = os.environ.get("API_HASH", "72095ec36984aa9ceb0dbaa9cec31559")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8306570313:AAFU7TYT_4KOl4-XLy9OX_92gewFSeJeeeQ")
-    DB_URL = os.environ.get("DB_URL", "mongodb+srv://rohitreddyathuru:R6Co7MOjTYQOAqcq@cluster0.xrwjpl9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    API_ID = int(os.environ.get("API_ID", "0"))
+    API_HASH = os.environ.get("API_HASH", "")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+    DB_URL = os.environ.get("DB_URL", "")
     DB_NAME = os.environ.get("DB_NAME", "Botskingdoms_Renamer")
 
-    # Bot owner/admins
-    admins = [int(x) for x in os.environ.get("ADMIN", "8476571786").split() if x]
+    # Bot owner/admins - Support space, comma, or semicolon
+    admins = [int(x) for x in re.split(r'[,; ]+', os.environ.get("ADMIN", "")) if x.strip().isdigit()]
     Botskingdoms = admins
 
     # Channel for force subscribe
-    FORCE_SUB = os.environ.get("FORCE_SUB", "RohitXmax")
-    FORCE_SUB_PIC = os.environ.get("FORCE_SUB_PIC", "https://i.rj1.dev/aMNXA.jpg")
+    FORCE_SUB = os.environ.get("FORCE_SUB", "")
+    FORCE_SUB_PIC = os.environ.get("FORCE_SUB_PIC", "https://telegra.ph/file/a8a183d2cc03a6a9b6c00.jpg")
 
     # Start pic
-    START_PIC = os.environ.get("START_PIC", "https://i.rj1.dev/aMNXA.jpg")
+    START_PIC = os.environ.get("START_PIC", "https://telegra.ph/file/a8a183d2cc03a6a9b6c00.jpg")
 
     # Workers for Pyrogram client
     WORKERS = int(os.environ.get("WORKERS", "20"))

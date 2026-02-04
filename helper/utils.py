@@ -28,6 +28,7 @@ def big_and_nice(text):
     # 4. Mentions: @\w+
     # 5. Hashtags: #\w+
     # 6. Markdown URLs: \[[^\]]+\]\([^\)]+\)
+    # 7. HTML Entities: &[a-zA-Z0-9#]+;
 
     combined_pattern = r'(<[^>]+>|\{[^\}]+\}|(?:http|https)://\S+|t\.me/\S+|@\w+|#\w+|\[[^\]]+\]\([^\)]+\)|&[a-zA-Z0-9#]+;)'
 
@@ -43,7 +44,8 @@ def big_and_nice(text):
         else:
             # Transform characters in this part
             transformed_part = "".join(get_char(c) for c in part)
-            # Escape HTML special characters
+            # Escape HTML special characters in the transformed part
+            # Note: Bold characters are not affected by html.escape
             result += html.escape(transformed_part)
 
     return result
@@ -52,6 +54,12 @@ def quote_text(text):
     if not text:
         return ""
 
+    # Strip existing blockquotes if they wrap the entire text
+    wrapped = False
+    if text.strip().startswith("<blockquote>") and text.strip().endswith("</blockquote>"):
+        text = re.sub(r'^<blockquote>(.*)</blockquote>$', r'\1', text.strip(), flags=re.DOTALL)
+        wrapped = True
+
     # Add credits if not present
     if "Botskingdoms" not in text:
         text += f"\n\n{Config.CREDITS_LINE}"
@@ -59,8 +67,7 @@ def quote_text(text):
     # Automatically apply big and nice style
     bn_text = big_and_nice(text)
 
-    if "<blockquote>" in bn_text:
-        return bn_text
+    # Wrap in blockquote
     return f"<blockquote>{bn_text}</blockquote>"
 
 def humanbytes(size):
@@ -68,7 +75,10 @@ def humanbytes(size):
         return "0 B"
     units = ["B", "KB", "MB", "GB", "TB", "PB"]
     size = float(size)
-    i = int(math.floor(math.log(size, 1024)))
+    try:
+        i = int(math.floor(math.log(size, 1024)))
+    except (ValueError, OverflowError):
+        i = 0
     return f"{round(size / math.pow(1024, i), 2)} {units[i]}"
 
 async def progress_for_pyrogram(current, total, ud_type, message, start):
@@ -84,9 +94,9 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
     if current == total or (now - last_update) > 4:
         progress_for_pyrogram.last_update_time[user_id] = now
         percentage = current * 100 / total
-        speed = current / diff
+        speed = current / diff if diff > 0 else 0
         elapsed_time = round(diff) * 1000
-        time_to_completion = round((total - current) / speed) * 1000
+        time_to_completion = round((total - current) / speed) * 1000 if speed > 0 else 0
         estimated_total_time = elapsed_time + time_to_completion
 
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
@@ -104,8 +114,11 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
             estimated_total_time if estimated_total_time != '' else "0 s"
         )
         try:
+            # We use text= here because message might be an edit call
+            import pyrogram
             await message.edit(
-                text=quote_text("{}\n {}".format(ud_type, tmp))
+                text=quote_text("{}\n {}".format(ud_type, tmp)),
+                parse_mode=pyrogram.enums.ParseMode.HTML
             )
         except:
             pass
@@ -171,15 +184,11 @@ def get_fillings(message):
 
     # Caption logic
     if message.caption:
-        # We store the raw caption text and html
         fillings['caption'] = message.caption
         try:
-            # entities to html
             fillings['html_caption'] = message.caption.html
         except:
             fillings['html_caption'] = message.caption
-
-        # Also provide big and nice versions
         fillings['bn_caption'] = big_and_nice(message.caption)
     else:
         fillings['html_caption'] = "N/A"
@@ -204,7 +213,6 @@ def get_fillings(message):
         fillings['filesize'] = humanbytes(message.photo.file_size)
         fillings['width'] = message.photo.width
         fillings['height'] = message.photo.height
-        # Photos don't usually have filenames in Pyrogram message objects unless it's a document-photo
         if 'filename' not in fillings:
              fillings['filename'] = "photo.jpg"
              fillings['ext'] = "jpg"

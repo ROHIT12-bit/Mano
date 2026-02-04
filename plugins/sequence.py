@@ -63,6 +63,6 @@ async def collection_handler(client: Client, message: Message):
     if await db.is_sequencing(message.from_user.id):
         file = getattr(message, message.media.value)
         await db.add_to_sequence(message.from_user.id, file.file_id, file.file_name, message.media.value)
-        await message.reply_text(quote_text(f"Added to sequence: <code>{file.file_name}</code>"), quote=True)
+        await message.reply_text(quote_text(f"Added to sequence: <code>{file.file_name}</code>"), quote=True, parse_mode=pyrogram.enums.ParseMode.HTML)
         # Stop propagation so rename.py doesn't catch it
         message.stop_propagation()

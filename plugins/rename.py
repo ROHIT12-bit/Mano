@@ -45,23 +45,19 @@ async def handle_file(client: Client, message: Message):
         # Truly automatic: Start processing immediately
         await process_rename(client, message, new_name)
     else:
-        await message.reply_text(
-            quote_text(f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?"),
+        await message.reply_text(quote_text(f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?"),
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("📝 Rename", callback_data="rename_manual")],
                 [InlineKeyboardButton("✖️ Cancel", callback_data="cancel_rename")]
             ]),
-            reply_to_message_id=message.id
-        )
+            reply_to_message_id=message.id, parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("rename_manual"))
 async def rename_manual_cb(client, query):
     await query.message.delete()
-    await query.message.reply_text(
-        quote_text("Please enter the new name for the file:"),
+    await query.message.reply_text(quote_text("Please enter the new name for the file:"),
         reply_markup=ForceReply(True),
-        reply_to_message_id=query.message.reply_to_message.id
-    )
+        reply_to_message_id=query.message.reply_to_message.id, parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_message(filters.private & filters.reply & filters.text)
 async def manual_rename_handler(client, message):
@@ -116,22 +112,22 @@ async def process_rename(client, message, new_name):
             progress_args=(quote_text("Downloading..."), ms, start_time)
         )
     except Exception as e:
-        await ms.edit(quote_text(f"Download Error: {e}\n\n{Config.CREDITS_LINE}"))
+        await ms.edit(quote_text(f"Download Error: {e}\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
         return
     finally:
         if user_id in ongoing_tasks and task in ongoing_tasks[user_id]:
             ongoing_tasks[user_id].remove(task)
 
     if not file_path:
-        await ms.edit(quote_text(f"Download failed.\n\n{Config.CREDITS_LINE}"))
+        await ms.edit(quote_text(f"Download failed.\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
         return
 
-    await ms.edit(quote_text("Applying Settings..."))
+    await ms.edit(quote_text("Applying Settings...", parse_mode=pyrogram.enums.ParseMode.HTML))
 
     # Metadata
     metadata_text, metadata_status = await db.get_metadata(user_id)
     if metadata_status and metadata_text:
-        await ms.edit(quote_text("Adding Metadata..."))
+        await ms.edit(quote_text("Adding Metadata...", parse_mode=pyrogram.enums.ParseMode.HTML))
         meta_path = os.path.join(path, "meta_" + new_name)
         await add_metadata(file_path, meta_path, metadata_text)
         os.remove(file_path)
@@ -170,7 +166,7 @@ async def process_rename(client, message, new_name):
     # Media Type
     media_type = await db.get_media_type(user_id)
 
-    await ms.edit(quote_text("Uploading..."))
+    await ms.edit(quote_text("Uploading...", parse_mode=pyrogram.enums.ParseMode.HTML))
     start_time = time.time()
 
     try:
@@ -200,7 +196,7 @@ async def process_rename(client, message, new_name):
                 progress_args=(quote_text("Uploading..."), ms, start_time)
             )
     except Exception as e:
-        await ms.edit(quote_text(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}"))
+        await ms.edit(quote_text(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
     else:
         await ms.delete()
         # Increment rename count and decrease credits
@@ -237,13 +233,11 @@ async def showformat_cmd(client, message):
 
 @Client.on_message(filters.private & filters.command("setmedia"))
 async def setmedia_cmd(client, message):
-    await message.reply_text(
-        quote_text("Choose allowed media types for upload:"),
+    await message.reply_text(quote_text("Choose allowed media types for upload:"),
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("Document", callback_data="media_document"),
              InlineKeyboardButton("Video", callback_data="media_video")]
-        ])
-    )
+        ]), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("^media_"))
 async def media_cb(client, query):
