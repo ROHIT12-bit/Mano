@@ -15,7 +15,7 @@ async def plan_cmd(client: Client, message: Message):
            f"Contact @Botskingdoms to buy.\n\n{Config.CREDITS_LINE}"
     await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
-@Client.on_message(filters.private & filters.command("trial"))
+@Client.on_message(filters.private & filters.command(["trial", "free"]))
 async def trial_cmd(client, message):
     user_id = message.from_user.id
     if await db.is_premium(user_id):
