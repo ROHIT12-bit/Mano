@@ -22,7 +22,7 @@ async def handle_file(client: Client, message: Message):
 
     # Check if user is banned
     if await db.is_banned(user_id):
-        await message.reply_text(quote_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"You are banned from using this bot.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
     file = getattr(message, message.media.value)
@@ -50,7 +50,6 @@ async def handle_file(client: Client, message: Message):
              new_name += os.path.splitext(filename)[1]
 
         # Truly automatic: Start processing immediately
-        await message.reply_text(quote_text(f"<b>Auto-Rename Detected!</b>\n\n<b>New Name:</b> <code>{new_name}</code>"), parse_mode=pyrogram.enums.ParseMode.HTML)
         await process_rename(client, message, new_name)
     else:
         await message.reply_text(quote_text(f"<b>File Name:</b> <code>{filename}</code>\n\nWhat do you want to do with this file?"),
@@ -58,14 +57,14 @@ async def handle_file(client: Client, message: Message):
                 [InlineKeyboardButton("📝 Rename", callback_data="rename_manual")],
                 [InlineKeyboardButton("✖️ Cancel", callback_data="cancel_rename")]
             ]),
-            reply_to_message_id=message.id, parse_mode=pyrogram.enums.ParseMode.HTML)
+            reply_to_message_id=message.id, parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_callback_query(filters.regex("rename_manual"))
 async def rename_manual_cb(client, query):
     await query.message.delete()
     await query.message.reply_text(quote_text("Please enter the new name for the file:"),
         reply_markup=ForceReply(True),
-        reply_to_message_id=query.message.reply_to_message.id, parse_mode=pyrogram.enums.ParseMode.HTML)
+        reply_to_message_id=query.message.reply_to_message.id, parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.reply & filters.text)
 async def manual_rename_handler(client, message):
@@ -83,7 +82,7 @@ async def rename_cb(client, query):
 
 @Client.on_callback_query(filters.regex("cancel_rename"))
 async def cancel_rename_cb(client, query):
-    await query.message.edit_text(quote_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await query.message.edit_text(quote_text(f"Renaming cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 async def process_rename(client, message, new_name):
     # Sanitize new_name to prevent path traversal
@@ -95,11 +94,11 @@ async def process_rename(client, message, new_name):
     if not is_premium:
         credits = await db.get_credits(user_id)
         if credits <= 0:
-            await message.reply_text(quote_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+            await message.reply_text(quote_text(f"You don't have enough credits. Please buy premium or wait for daily credits.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
             return
 
     # Download file
-    ms = await message.reply_text(quote_text("Trying to Download..."), parse_mode=pyrogram.enums.ParseMode.HTML)
+    ms = await message.reply_text(quote_text("Trying to Download..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
     path = os.path.join("downloads", str(user_id), str(time.time()))
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -120,22 +119,22 @@ async def process_rename(client, message, new_name):
             progress_args=(quote_text("Downloading..."), ms, start_time)
         )
     except Exception as e:
-        await ms.edit(quote_text(f"Download Error: {e}\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
+        await ms.edit(quote_text(f"Download Error: {e}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     finally:
         if user_id in ongoing_tasks and task in ongoing_tasks[user_id]:
             ongoing_tasks[user_id].remove(task)
 
     if not file_path:
-        await ms.edit(quote_text(f"Download failed.\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
+        await ms.edit(quote_text(f"Download failed.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
-    await ms.edit(quote_text("Applying Settings...", parse_mode=pyrogram.enums.ParseMode.HTML))
+    await ms.edit(quote_text("Applying Settings..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
     # Metadata
     metadata_text, metadata_status = await db.get_metadata(user_id)
     if metadata_status and metadata_text:
-        await ms.edit(quote_text("Adding Metadata...", parse_mode=pyrogram.enums.ParseMode.HTML))
+        await ms.edit(quote_text("Adding Metadata..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         meta_path = os.path.join(path, "meta_" + new_name)
         await add_metadata(file_path, meta_path, metadata_text)
         os.remove(file_path)
@@ -174,7 +173,7 @@ async def process_rename(client, message, new_name):
     # Media Type
     media_type = await db.get_media_type(user_id)
 
-    await ms.edit(quote_text("Uploading...", parse_mode=pyrogram.enums.ParseMode.HTML))
+    await ms.edit(quote_text("Uploading..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
     start_time = time.time()
 
     try:
@@ -204,7 +203,7 @@ async def process_rename(client, message, new_name):
                 progress_args=(quote_text("Uploading..."), ms, start_time)
             )
     except Exception as e:
-        await ms.edit(quote_text(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}", parse_mode=pyrogram.enums.ParseMode.HTML))
+        await ms.edit(quote_text(f"Upload Error: {e}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
     else:
         await ms.delete()
         # Increment rename count and decrease credits
@@ -225,19 +224,19 @@ async def process_rename(client, message, new_name):
 @Client.on_message(filters.private & filters.command("autorename"))
 async def autorename_cmd(client, message):
     if len(message.command) < 2:
-        await message.reply_text(quote_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text("Usage: /autorename [format]\nExample: /autorename [Prefix] {file_name} [Suffix]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     format = message.text.split(" ", 1)[1]
     await db.set_autorename_format(message.from_user.id, format)
-    await message.reply_text(quote_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(f"Auto-rename format set to: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("showformat"))
 async def showformat_cmd(client, message):
     format = await db.get_autorename_format(message.from_user.id)
     if format:
-        await message.reply_text(quote_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"Your current auto-rename format is: <code>{format}</code>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
     else:
-        await message.reply_text(quote_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"You haven't set any auto-rename format.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("setmedia"))
 async def setmedia_cmd(client, message):
@@ -245,13 +244,13 @@ async def setmedia_cmd(client, message):
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("Document", callback_data="media_document"),
              InlineKeyboardButton("Video", callback_data="media_video")]
-        ]), parse_mode=pyrogram.enums.ParseMode.HTML)
+        ]), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_callback_query(filters.regex("^media_"))
 async def media_cb(client, query):
     media_type = query.data.split("_")[1]
     await db.set_media_type(query.from_user.id, media_type)
-    await query.message.edit_text(quote_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await query.message.edit_text(quote_text(f"Default upload media type set to: <b>{media_type}</b>\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("cancel"))
 async def cancel_task(client, message):
@@ -260,21 +259,21 @@ async def cancel_task(client, message):
 
     if await db.is_sequencing(user_id):
         await db.stop_sequence(user_id)
-        await message.reply_text(quote_text(Config.CANCEL_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(Config.CANCEL_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         cancelled = True
 
     if user_id in ongoing_tasks and ongoing_tasks[user_id]:
         for task in ongoing_tasks[user_id]:
             task.cancel()
         ongoing_tasks[user_id] = []
-        await message.reply_text(quote_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"Ongoing tasks cancelled.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         cancelled = True
 
     if not cancelled:
-        await message.reply_text(quote_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"No ongoing task or sequence found.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("queue"))
 async def queue_cmd(client, message):
     user_id = message.from_user.id
     count = len(ongoing_tasks.get(user_id, []))
-    await message.reply_text(quote_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(f"You have {count} tasks in progress.\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)

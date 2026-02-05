@@ -8,24 +8,24 @@ from helper.utils import quote_text
 @Client.on_message(filters.private & filters.command("ssequence"))
 async def start_sequence_cmd(client: Client, message: Message):
     if await db.is_sequencing(message.from_user.id):
-        await message.reply_text(quote_text("You are already in a file sequencing session."), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text("You are already in a file sequencing session."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     await db.start_sequence(message.from_user.id)
-    await message.reply_text(quote_text(Config.S_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(Config.S_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("esequence"))
 async def end_sequence_cmd(client: Client, message: Message):
     if not await db.is_sequencing(message.from_user.id):
-        await message.reply_text(quote_text("You are not in a file sequencing session. Use /ssequence to start one."), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text("You are not in a file sequencing session. Use /ssequence to start one."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
     files = await db.get_sequence(message.from_user.id)
     if not files:
         await db.stop_sequence(message.from_user.id)
-        await message.reply_text(quote_text("No files were sent. Sequencing session ended."), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text("No files were sent. Sequencing session ended."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
-    await message.reply_text(quote_text(Config.E_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(Config.E_SEQUENCE_MSG), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
     # Send files in order
     for i, file in enumerate(files, 1):
@@ -43,7 +43,7 @@ async def end_sequence_cmd(client: Client, message: Message):
             await message.reply_text(quote_text(f"Error sending file {i}: {e}"), parse_mode=pyrogram.enums.ParseMode.HTML)
 
     await db.stop_sequence(message.from_user.id)
-    await message.reply_text(quote_text(f"Successfully sequenced {len(files)} files!\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(f"Successfully sequenced {len(files)} files!\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("stats"))
 async def stats_cmd(client: Client, message: Message):
@@ -58,7 +58,7 @@ async def stats_cmd(client: Client, message: Message):
            f"Renames: {user_data.get('rename_count', 0)}\n" \
            f"Credits: {user_data.get('credits', 0)}\n\n" \
            f"{Config.CREDITS_LINE}"
-    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & (filters.document | filters.video | filters.audio | filters.photo), group=-1)
 async def collection_handler(client: Client, message: Message):
@@ -66,6 +66,6 @@ async def collection_handler(client: Client, message: Message):
         file = getattr(message, message.media.value)
         filename = getattr(file, "file_name", "photo.jpg")
         await db.add_to_sequence(message.from_user.id, file.file_id, filename, message.media.value)
-        await message.reply_text(quote_text(f"Added to sequence: <code>{filename}</code>"), quote=True, parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text(f"Added to sequence: <code>{filename}</code>"), quote=True, parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         # Stop propagation so rename.py doesn't catch it
         message.stop_propagation()

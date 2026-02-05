@@ -37,7 +37,7 @@ async def start(client: Client, message: Message):
         try:
             user_member = await client.get_chat_member(Config.FORCE_SUB, user.id)
             if user_member.status == "kicked":
-                await message.reply_text(quote_text("Sorry, you are banned from using me."), parse_mode=pyrogram.enums.ParseMode.HTML)
+                await message.reply_text(quote_text("Sorry, you are banned from using me."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
                 return
         except Exception:
             await message.reply_photo(
@@ -57,7 +57,7 @@ async def start(client: Client, message: Message):
     if Config.START_PIC:
         await message.reply_photo(photo=Config.START_PIC, caption=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
     else:
-        await message.reply_text(text=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(text=text, reply_markup=buttons, parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("info"))
 async def info(client: Client, message: Message):
@@ -72,12 +72,12 @@ async def info(client: Client, message: Message):
            f"Renames: {user_data.get('rename_count', 0)}\n\n" \
            f"{Config.CREDITS_LINE}"
 
-    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("source"))
 async def source_cmd(client: Client, message: Message):
     text = f"This bot is open source. You can find the source code on GitHub.\n\n{Config.CREDITS_LINE}"
-    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text(text), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_callback_query(filters.regex("about"))
 async def about(client, query):

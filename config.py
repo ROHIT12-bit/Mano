@@ -26,7 +26,7 @@ class Config:
     WORKERS = int(os.environ.get("WORKERS", "20"))
 
     # Default caption
-    DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\nPowered By <a href='https://t.me/Botskingdoms'>@Botskingdoms</a>")
+    DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\nPowered By @Botskingdoms")
 
     # Messages
     START_MSG = os.environ.get("START_MSG", "HEY!!, 『{mention}』\n\n➤ PURPOSE OF THE BOT:\nTHIS BOT MAKES RENAMING ANIME AND SERIES FILES EASY AND STRESS-FREE.\n\n➤ MAINTAINED BY : @Botskingdoms\n__________________________________")
@@ -40,7 +40,7 @@ class Config:
     CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "Sequence cancelled!")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "Powered By <a href='https://t.me/Botskingdoms'>@Botskingdoms</a>")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "Powered By @Botskingdoms")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
