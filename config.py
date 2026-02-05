@@ -34,7 +34,7 @@ class Config:
     START_MSG = os.environ.get("START_MSG", "›› ʜᴇʏ!!,  『{mention}』\n\n➤ ᴘᴜʀᴘᴏꜱᴇ ᴏꜰ ᴛʜᴇ ʙᴏᴛ:\n\nᴛʜɪꜱ ʙᴏᴛ ᴍᴀᴋᴇꜱ ʀᴇɴᴀᴍɪɴɢ ᴀɴɪᴍᴇ ᴀɴᴅ ꜱᴇʀɪᴇꜱ ꜰɪʟᴇꜱ ᴇᴀꜱʏ ᴀɴᴅ ꜱᴛʀᴇꜱꜱ-ꜰʀᴇᴇ.\n\n‣ ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : @Botskingdoms\n__________________________________")
     FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "> ›› ʜᴇʏ 『{mention}』\n\n‼️ ʟᴏᴏᴋs ʟɪᴋᴇ ʏᴏᴜ ʜᴀᴠᴇɴ'ᴛ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ʏᴇᴛ, sᴜʙsᴄʀɪʙᴇ ɴᴏᴡ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ")
     HELP_MSG = os.environ.get("HELP_MSG", "Send any file and choose option.\nUse /autorename to set format.")
-    ABOUT_MSG = os.environ.get("ABOUT_MSG", "<b><blockquote expandable>❍ ᴍʏ ɴᴀᴍᴇ : <a href="https://t.me/AkiraRenameBot">ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ</a>
+    ABOUT_MSG = os.environ.get("ABOUT_MSG", """<b><blockquote expandable>❍ ᴍʏ ɴᴀᴍᴇ : <a href="https://t.me/AkiraRenameBot">ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ</a>
 ❍ ᴅᴇᴠᴇʟᴏᴩᴇʀ : <a href="https://t.me/Rioshin">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
 ❍ ʟᴀɴɢᴜᴀɢᴇ : <a href="https://www.python.org/">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
 ❍ ᴅᴀᴛᴀʙᴀꜱᴇ : <a href="https://www.mongodb.com/">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
@@ -49,7 +49,7 @@ class Config:
  > ➲ ɪ ᴄᴀɴ ᴀᴅᴅ ᴄᴜꜱᴛᴏᴍ ᴘᴀꜱꜱᴡᴏʀᴅꜱ and ʙᴀɴɴᴇʀꜱ ᴏɴ ғɪʀsᴛ ᴏʀ ʟᴀsᴛ ᴘᴀɢᴇ.
  > ➲ ꜰᴏʀ ᴍᴏʀᴇ ꜰᴇᴀᴛᴜʀᴇꜱ, ᴄʜᴇᴄᴋ ᴄᴏᴍᴍᴀɴᴅs.
 
-➲ ꜰᴏʀ ᴍᴏʀᴇ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ᴛʜɪꜱ ʙᴏᴛ ᴄᴏɴᴛᴀᴄᴛ ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ")
+➲ ꜰᴏʀ ᴍᴏʀᴇ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ᴛʜɪꜱ ʙᴏᴛ ᴄᴏɴᴛᴀᴄᴛ ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ""")
 
     # Sequence Messages
     S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "Sequence started! Send files.")
