@@ -31,8 +31,12 @@ class Config:
     DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\nPowered By @Botskingdoms")
 
     # Messages
-    START_MSG = os.environ.get("START_MSG", "HEY!!, 『{mention}』\n\n➤ PURPOSE OF THE BOT:\nTHIS BOT MAKES RENAMING ANIME AND SERIES FILES EASY AND STRESS-FREE.\n\n➤ MAINTAINED BY : @Botskingdoms\n__________________________________")
-    FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "Join our channel to use me!")
+    START_MSG = os.environ.get("START_MSG", "›› ʜᴇʏ!!,  『{mention}』\n\n➤ ᴘᴜʀᴘᴏꜱᴇ ᴏꜰ ᴛʜᴇ ʙᴏᴛ:
+ᴛʜɪꜱ ʙᴏᴛ ᴍᴀᴋᴇꜱ ʀᴇɴᴀᴍɪɴɢ ᴀɴɪᴍᴇ ᴀɴᴅ ꜱᴇʀɪᴇꜱ ꜰɪʟᴇꜱ ᴇᴀꜱʏ ᴀɴᴅ ꜱᴛʀᴇꜱꜱ-ꜰʀᴇᴇ.
+
+‣ ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : @Botskingdoms\n__________________________________")
+    FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "> ›› ʜᴇʏ 『{mention}』
+ ‼️ ʟᴏᴏᴋs ʟɪᴋᴇ ʏᴏᴜ ʜᴀᴠᴇɴ'ᴛ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ʏᴇᴛ, sᴜʙsᴄʀɪʙᴇ ɴᴏᴡ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ")
     HELP_MSG = os.environ.get("HELP_MSG", "Send any file and choose option.\nUse /autorename to set format.")
     ABOUT_MSG = os.environ.get("ABOUT_MSG", "Fast Renamer Bot By @Botskingdoms.")
 
