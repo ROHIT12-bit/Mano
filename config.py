@@ -38,7 +38,22 @@ class Config:
     FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "> ›› ʜᴇʏ 『{mention}』
  ‼️ ʟᴏᴏᴋs ʟɪᴋᴇ ʏᴏᴜ ʜᴀᴠᴇɴ'ᴛ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ʏᴇᴛ, sᴜʙsᴄʀɪʙᴇ ɴᴏᴡ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ")
     HELP_MSG = os.environ.get("HELP_MSG", "Send any file and choose option.\nUse /autorename to set format.")
-    ABOUT_MSG = os.environ.get("ABOUT_MSG", "Fast Renamer Bot By @Botskingdoms.")
+    ABOUT_MSG = os.environ.get("ABOUT_MSG", "<b><blockquote expandable>❍ ᴍʏ ɴᴀᴍᴇ : <a href="https://t.me/AkiraRenameBot">ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ</a>
+❍ ᴅᴇᴠᴇʟᴏᴩᴇʀ : <a href="https://t.me/ROHITREDDY69">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+❍ ʟᴀɴɢᴜᴀɢᴇ : <a href="https://www.python.org/">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+❍ ᴅᴀᴛᴀʙᴀꜱᴇ : <a href="https://www.mongodb.com/">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+❍ ʜᴏꜱᴛᴇᴅ ᴏɴ : <a href="https://t.me/botskingdoms">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+❍ ᴍᴀɪɴ ᴄʜᴀɴɴᴇʟ : <a href="https://t.me/botskingdoms">ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
+
+➻ ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ɢɪᴠᴇɴ ʙᴇʟᴏᴡ ғᴏʀ ɢᴇᴛᴛɪɴɢ ʙᴀsɪᴄ ʜᴇʟᴩ ᴀɴᴅ ɪɴғᴏ ᴀʙᴏᴜᴛ ᴍᴇ.</blockquote></b>
+
+ > ➻ ꜰᴇᴀᴛᴜʀᴇꜱ :
+ > ➲ ɪ ᴄᴀɴ ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ ʏᴏᴜʀ ʙᴀꜱᴇᴅ ᴏɴ ᴄᴜꜱᴛᴏᴍ ꜱᴇᴛᴛɪɴɢꜱ.
+ > ➲ ɪ ꜱᴜᴘᴘᴏʀᴛ ꜱᴇᴀꜱᴏɴ, ᴇᴘɪꜱᴏᴅᴇ, ǫᴜᴀʟɪᴛʏ, ᴀɴᴅ ᴏᴛʜᴇʀ ᴍᴇᴛᴀᴅᴀᴛᴀ ᴀᴜᴛᴏ-ᴇxᴛʀᴀᴄᴛɪᴏɴ.
+ > ➲ ɪ ᴄᴀɴ ᴀᴅᴅ ᴄᴜꜱᴛᴏᴍ ᴘᴀꜱꜱᴡᴏʀᴅꜱ and ʙᴀɴɴᴇʀꜱ ᴏɴ ғɪʀsᴛ ᴏʀ ʟᴀsᴛ ᴘᴀɢᴇ.
+ > ➲ ꜰᴏʀ ᴍᴏʀᴇ ꜰᴇᴀᴛᴜʀᴇꜱ, ꜱᴇɴᴅ /help ᴄᴏᴍᴍᴀɴᴅ.
+
+➲ ꜰᴏʀ ᴍᴏʀᴇ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ᴛʜɪꜱ ʙᴏᴛ ᴄᴏɴᴛᴀᴄᴛ ᴛʜᴇ ᴄʀᴇᴀᴛᴏʀ")
 
     # Sequence Messages
     S_SEQUENCE_MSG = os.environ.get("S_SEQUENCE_MSG", "Sequence started! Send files.")
@@ -46,7 +61,7 @@ class Config:
     CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "Sequence cancelled!")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "Powered By @Botskingdoms")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "Powered By Botskingdoms")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
