@@ -17,8 +17,8 @@ def get_start_buttons():
         ],
         [InlineKeyboardButton("• ᴄᴏᴍᴍᴀɴᴅs •", callback_data="help")],
         [
-            InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇ • ⚡", url="https://t.me/Botskingdoms"),
-            InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ • ⚡", url="https://t.me/Botskingdoms_Support")
+            InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇ • ", url="https://t.me/Botskingdoms"),
+            InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ • ", url="https://t.me/Botskingdoms_Support")
         ],
         [
             InlineKeyboardButton("• ᴘʀᴇᴍɪᴜᴍ •", callback_data="plan_callback")
