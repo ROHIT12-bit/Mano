@@ -15,14 +15,14 @@ def get_start_buttons():
             InlineKeyboardButton("💸", callback_data="premium_callback"),
             InlineKeyboardButton("🖥️", callback_data="source_info")
         ],
-        [InlineKeyboardButton("• 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 •", callback_data="help")],
+        [InlineKeyboardButton("• ᴄᴏᴍᴍᴀɴᴅs •", callback_data="help")],
         [
-            InlineKeyboardButton("• 𝗨𝗣𝗗𝗔𝗧𝗘𝗦 • ⚡", url="https://t.me/Botskingdoms"),
-            InlineKeyboardButton("• 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 • ⚡", url="https://t.me/Botskingdoms_Support")
+            InlineKeyboardButton("• ᴜᴘᴅᴀᴛᴇ • ⚡", url="https://t.me/Botskingdoms"),
+            InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ • ⚡", url="https://t.me/Botskingdoms_Support")
         ],
         [
-            InlineKeyboardButton("• 𝗔𝗕𝗢𝗨𝗧 •", callback_data="about"),
-            InlineKeyboardButton("• 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 •", callback_data="plan_callback")
+            InlineKeyboardButton("• ᴘʀᴇᴍɪᴜᴍ •", callback_data="plan_callback")
+            InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about")
         ]
     ])
 
@@ -104,7 +104,19 @@ async def admin_info_cb(client, query):
 
 @Client.on_callback_query(filters.regex("plan_callback"))
 async def plan_callback(client, query):
-    text = quote_text("<b>Premium Plans:</b>\n\n1. Daily: 10 INR\n2. Weekly: 50 INR\n3. Monthly: 150 INR\n\nContact @Botskingdoms to buy.")
+    text = quote_text("""ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ sᴇʀᴠɪᴄᴇ ᴀɴᴅ ᴇɴJᴏʏ ᴇxᴄʟᴜsɪᴠᴇ ғᴇᴀᴛᴜʀᴇs:
+○ ᴜɴʟɪᴍɪᴛᴇᴅ Rᴇɴᴀᴍɪɴɢ.
+> ○ ɴᴏ ᴀᴅꜱ.
+> ○ ᴇᴀʀʟʏ Aᴄᴄᴇss.
+> ○ ᴍᴏʀᴇ ᴘʀɪᴏʀɪᴛʏ
+
+• ᴜꜱᴇ /plan ᴛᴏ ꜱᴇᴇ ᴀʟʟ ᴏᴜʀ ᴘʟᴀɴꜱ ᴀᴛ ᴏɴᴄᴇ.
+
+➲ ғɪʀsᴛ sᴛᴇᴘ : ᴘᴀʏ ᴛʜᴇ ᴀᴍᴏᴜɴᴛ ᴀᴄᴄᴏʀᴅɪɴɢ ᴛᴏ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ ᴘʟᴀɴ ᴛᴏ ᴛʜᴇ ᴜᴘɪ ɪᴅ ᴏʀ Qʀ.
+➲ secoɴᴅ sᴛᴇᴘ : ᴛᴀᴋᴇ ᴀ sᴄʀᴇᴇɴsʜᴏᴛ ᴏғ ʏᴏᴜʀ ᴘᴀʏᴍᴇɴᴛ ᴀɴᴅ sʜᴀʀᴇ ɪᴛ ᴅɪʀᴇᴄᴛʟʏ ʜᴇʀᴇ: @Rioshin 
+➲ ᴀʟᴛᴇʀɴᴀᴛɪᴠᴇ sᴛᴇᴘ : ᴏʀ ᴜᴘʟᴏᴀᴅ ᴛʜᴇ sᴄʀᴇᴇɴsʜᴏᴛ ʜᴇʀᴇ ᴀɴᴅ ʀᴇᴘʟʏ ᴡɪᴛʜ ᴛʜᴇ /bought ᴄᴏᴍᴍᴀɴᴅ. [ᴍᴀʏ ɴᴏᴛ ᴡᴏʀᴋ ᴘʀᴏᴘᴇʀʟʏ]
+
+Yᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ ᴡɪʟʟ ʙᴇ ᴀᴄᴛɪᴠᴀᴛᴇᴅ ᴀғᴛᴇʀ ᴠᴇʀɪғɪᴄᴀᴛɪᴏɴ""")
     await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
 
 @Client.on_callback_query(filters.regex("premium_callback"))
@@ -118,5 +130,5 @@ async def premium_callback(client, query):
 
 @Client.on_callback_query(filters.regex("source_info"))
 async def source_info_cb(client, query):
-    text = quote_text(f"Bot Source: Private\nDeveloper: @Botskingdoms\n\n{Config.CREDITS_LINE}")
+    text = quote_text(f"Bot Source: https://github.com/Rioshin/AutoRenamerBot\n\n{Config.CREDITS_LINE}")
     await query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="start")]]), parse_mode=pyrogram.enums.ParseMode.HTML)
