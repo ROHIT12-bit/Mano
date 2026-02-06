@@ -12,16 +12,16 @@ from helper.utils import quote_text
 async def status_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     users_count = await db.total_users_count()
-    await message.reply_text(quote_text(f"<b>Bot Status:</b>\n\nTotal Users: {users_count}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+    await message.reply_text(quote_text(f"<b>ʙᴏᴛ sᴛᴀᴛᴜs:</b>\n\nTotal Users: {users_count}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("users"))
 async def users_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     users_count = await db.total_users_count()
     await message.reply_text(quote_text(f"Total Users: {users_count}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
@@ -30,14 +30,14 @@ async def users_cmd(client: Client, message: Message):
 async def broadcast_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
     if not message.reply_to_message and len(message.command) < 2:
-        await message.reply_text(quote_text("Reply to a message or provide text to broadcast."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴏʀ ᴘʀᴏᴠɪᴅᴇ ᴛᴇxᴛ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
 
-    ms = await message.reply_text(quote_text("Broadcasting..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+    ms = await message.reply_text(quote_text("ʙʀᴏᴀᴅᴄᴀsᴛɪɴɢ..."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
     all_users = await db.get_all_users()
     success = 0
     failed = 0
@@ -53,16 +53,16 @@ async def broadcast_cmd(client: Client, message: Message):
         except:
             failed += 1
 
-    await ms.edit(quote_text(f"<b>Broadcast Completed:</b>\n\nSuccess: {success}\nFailed: {failed}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+    await ms.edit(quote_text(f"<b>ʙʀᴏᴀᴅᴄᴀsᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ:</b>\n\nSuccess: {success}\nFailed: {failed}\n\n{Config.CREDITS_LINE}"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
 
 @Client.on_message(filters.private & filters.command("ban"))
 async def ban_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     if len(message.command) < 2:
-        await message.reply_text(quote_text("Usage: /ban [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴜsᴀɢᴇ: /ban [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     try:
         user_id = int(message.command[1])
@@ -75,10 +75,10 @@ async def ban_cmd(client: Client, message: Message):
 async def unban_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     if len(message.command) < 2:
-        await message.reply_text(quote_text("Usage: /unban [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴜsᴀɢᴇ: /unban [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     try:
         user_id = int(message.command[1])
@@ -91,19 +91,19 @@ async def unban_cmd(client: Client, message: Message):
 async def restart_cmd(client: Client, message: Message):
     Botskingdoms = await db.get_admins()
     if message.from_user.id not in Botskingdoms:
-        await message.reply_text(quote_text("Access Denied! You are not an admin."), parse_mode=pyrogram.enums.ParseMode.HTML)
+        await message.reply_text(quote_text("ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ! ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀɴ ᴀᴅᴍɪɴ."), parse_mode=pyrogram.enums.ParseMode.HTML)
         return
-    await message.reply_text(quote_text("Restarting..."), parse_mode=pyrogram.enums.ParseMode.HTML)
+    await message.reply_text(quote_text("ʀᴇsᴛᴀʀᴛɪɴɢ..."), parse_mode=pyrogram.enums.ParseMode.HTML)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 @Client.on_message(filters.private & filters.command("add_admin"))
 async def add_admin_cmd(client: Client, message: Message):
     # Only owner (from config) can add admins
     if message.from_user.id not in Config.Botskingdoms:
-        await message.reply_text(quote_text("Only the owner can add admins."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴏɴʟʏ ᴛʜᴇ ᴏᴡɴᴇʀ ᴄᴀɴ ᴀᴅᴅ ᴀᴅᴍɪɴs."), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     if len(message.command) < 2:
-        await message.reply_text(quote_text("Usage: /add_admin [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴜsᴀɢᴇ: /add_admin [user_id]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     try:
         user_id = int(message.command[1])
@@ -125,7 +125,7 @@ async def shortlink_cmd(client, message):
     if message.from_user.id not in Botskingdoms:
         return
     if len(message.command) < 3:
-        await message.reply_text(quote_text("Usage: /shortlink [url] [api]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
+        await message.reply_text(quote_text("ᴜsᴀɢᴇ: /shortlink [url] [api]"), parse_mode=pyrogram.enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     url = message.command[1]
     api = message.command[2]
