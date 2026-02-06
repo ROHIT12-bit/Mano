@@ -31,7 +31,7 @@ class Config:
     DEF_CAP = os.environ.get("DEF_CAP", "<b>{file_name}</b>\n\n<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote>")
 
     # Messages
-    START_MSG = os.environ.get("START_MSG", "›› ʜᴇʏ!!,  『{mention}』\n\n➤ ᴘᴜʀᴘᴏꜱᴇ ᴏꜰ ᴛʜᴇ ʙᴏᴛ:\n\nᴛʜɪꜱ ʙᴏᴛ ᴍᴀᴋᴇꜱ ʀᴇɴᴀᴍɪɴɢ ᴀɴɪᴍᴇ ᴀɴᴅ ꜱᴇʀɪᴇꜱ ꜰɪʟᴇꜱ ᴇᴀꜱʏ ᴀɴᴅ ꜱᴛʀᴇꜱꜱ-ꜰʀᴇᴇ.\n\n‣ ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : @Botskingdoms\n__________________________________")
+    START_MSG = os.environ.get("START_MSG", "›› ʜᴇʏ!!,  『{mention}』\n\n➤ ᴘᴜʀᴘᴏꜱᴇ ᴏꜰ ᴛʜᴇ ʙᴏᴛ:\n\nᴛʜɪꜱ ʙᴏᴛ ᴍᴀᴋᴇꜱ ʀᴇɴᴀᴍɪɴɢ ᴀɴɪᴍᴇ ᴀɴᴅ ꜱᴇʀɪᴇꜱ ꜰɪʟᴇꜱ ᴇᴀꜱʏ ᴀɴᴅ ꜱᴛʀᴇꜱꜱ-ꜰʀᴇᴇ.\n\n‣ ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <blockquote>[BᴏᴛsKɪɴɢᴅᴏᴍs](https://t.me/BOTSKINGDOMS)</blockquote>\n__________________________________")
     FORCE_SUB_MSG = os.environ.get("FORCE_SUB_MSG", "> ›› ʜᴇʏ 『{mention}』\n\n‼️ ʟᴏᴏᴋs ʟɪᴋᴇ ʏᴏᴜ ʜᴀᴠᴇɴ'ᴛ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ʏᴇᴛ, sᴜʙsᴄʀɪʙᴇ ɴᴏᴡ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ")
     HELP_MSG = os.environ.get("HELP_MSG", "Send any file and choose option.\nUse /autorename to set format.")
     ABOUT_MSG = os.environ.get("ABOUT_MSG", """<b><blockquote expandable>❍ ᴍʏ ɴᴀᴍᴇ : <a href="https://t.me/AkiraRenameBot">ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ</a>
@@ -57,7 +57,7 @@ class Config:
     CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "Sequence cancelled!")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "<blockquote>[Powered by Botskingdoms](https://t.me/BOTSKINGDOMS)</blockquote>")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "[ᴘᴏᴡᴇʀᴇᴅ ʙʏ Bᴏᴛskɪɴɢᴅᴏᴍs](https://t.me/BOTSKINGDOMS)")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
