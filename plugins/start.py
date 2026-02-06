@@ -10,8 +10,8 @@ def get_start_buttons():
     return InlineKeyboardMarkup([
         [
             InlineKeyboardButton("🏡", callback_data="start"),
-            InlineKeyboardButton("🛡️", callback_data="admin_info"),
-            InlineKeyboardButton("💳", callback_data="plan_callback"),
+            InlineKeyboardButton("🛡️", callback_data="https://t.me/BOTSKINGDOMS"),
+            InlineKeyboardButton("💳", callback_data="https://t.me/BOTSKINGDOMS"),
             InlineKeyboardButton("💸", callback_data="premium_callback"),
             InlineKeyboardButton("🖥️", callback_data="source_info")
         ],
