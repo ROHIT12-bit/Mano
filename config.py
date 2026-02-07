@@ -57,7 +57,7 @@ class Config:
     CANCEL_SEQUENCE_MSG = os.environ.get("CANCEL_SEQUENCE_MSG", "Sequence cancelled!")
 
     # Credits line
-    CREDITS_LINE = os.environ.get("CREDITS_LINE", "[ᴘᴏᴡᴇʀᴇᴅ ʙʏ Bᴏᴛskɪɴɢᴅᴏᴍs](https://t.me/BOTSKINGDOMS)")
+    CREDITS_LINE = os.environ.get("CREDITS_LINE", "<a href="https://t.me/BOTSKINGDOMS">[ᴘᴏᴡᴇʀᴇᴅ ʙʏ Bᴏᴛskɪɴɢᴅᴏᴍs]</a>")
 
     # Logs channel
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
